@@ -1,5 +1,6 @@
 from app.dependencies.database_deps import get_db
 from app.dependencies.auth_deps import (
+    get_user_repository,
     get_auth_service,
     get_current_user_role,
     require_employer,
@@ -10,6 +11,7 @@ from app.dependencies.offer_deps import get_offer_repository, get_offer_service
 
 __all__ = [
     "get_db",
+    "get_user_repository",
     "get_auth_service",
     "get_current_user_role",
     "require_employer",

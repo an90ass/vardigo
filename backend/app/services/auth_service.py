@@ -1,17 +1,27 @@
 from fastapi import HTTPException, status
-from app.models.enums import UserRole
+from app.models import UserORM, UserRole
+from app.repositories.user_repository import UserRepository
 from app.schemas.auth import LoginResponse
 
 class AuthService:
 
-    @staticmethod
-    def authenticate(role: UserRole) -> LoginResponse:
-        if role == UserRole.EMPLOYER:
-            return LoginResponse(token="dev-employer", role=UserRole.EMPLOYER)
-        elif role == UserRole.WORKER:
-            return LoginResponse(token="dev-worker", role=UserRole.WORKER)
+    def __init__(self, user_repo: UserRepository):
+        self.user_repo = user_repo
 
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Geçersiz rol. Sadece 'employer' veya 'worker' kabul edilir."
-        )
+    def authenticate(self, role: UserRole) -> LoginResponse:
+        user = self.user_repo.get_by_role(role)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"'{role.value}' rolüne sahip kullanıcı bulunamadı."
+            )
+        return LoginResponse(token=user.token, role=user.role)
+
+    def verify_token(self, token: str) -> UserORM:
+        user = self.user_repo.get_by_token(token)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Geçersiz veya yetkisiz token."
+            )
+        return user

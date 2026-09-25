@@ -18,11 +18,7 @@ def get_candidates(
     _role: UserRole = Depends(require_employer),
     candidate_service: CandidateService = Depends(get_candidate_service)
 ):
-    """
-    GET /api/candidates
-    Retrieves matching candidates for employers.
-    Requires Employer token (Authorization: Bearer dev-employer).
-    """
+
     tab_val = tab.value if tab else None
     sort_val = sort.value if sort else None
     data = candidate_service.get_candidates_list(tab=tab_val, sort=sort_val)
