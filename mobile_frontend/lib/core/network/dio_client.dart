@@ -1,28 +1,15 @@
 import 'package:dio/dio.dart';
 import '../enums/app_enums.dart';
+import '../storage/token_storage.dart';
 import 'api_exception.dart';
 import 'api_interface.dart';
 import 'api_url.dart';
 import 'refresh_token_interceptor.dart';
 
-
 class DioClient implements API {
   static const int _maxRetries = 3;
 
   final Dio dio;
-  String? _authToken;
-
-  // Current active authentication token.
-  String? get currentToken => _authToken;
-
-// TODO[ANAS]: Save token in secure storage
-  void setAuthToken(String token) {
-    _authToken = token;
-  }
-
-  void clearAuthToken() {
-    _authToken = null;
-  }
 
   DioClient({Dio? customDio, String? baseUrl})
       : dio = customDio ??
@@ -45,12 +32,16 @@ class DioClient implements API {
   List<Interceptor> _buildInterceptors() {
     return [
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
           final authType =
               options.extra['authType'] as ApiAuthType? ?? ApiAuthType.none;
 
-          if (authType == ApiAuthType.bearerToken && _authToken != null && _authToken!.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $_authToken';
+          // Directly fetch token from TokenStorage (Single Source of Truth)
+          if (authType == ApiAuthType.bearerToken) {
+            final token = await TokenStorage.getToken();
+            if (token != null && token.isNotEmpty) {
+              options.headers['Authorization'] = 'Bearer $token';
+            }
           }
 
           handler.next(options);
@@ -64,7 +55,6 @@ class DioClient implements API {
           if (retries < _maxRetries && _isNetworkOrTimeoutError(error)) {
             requestOptions.extra['retries'] = retries + 1;
             try {
-              // Short delay before retrying
               await Future.delayed(const Duration(milliseconds: 500));
               final response = await dio.fetch(requestOptions);
               return handler.resolve(response);
@@ -78,7 +68,6 @@ class DioClient implements API {
           return handler.next(error);
         },
       ),
-      // This interceptor handles 401 Unauthorized responses but its disabled because it is not needed
       RefreshTokenInterceptor(dio: dio),
     ];
   }
