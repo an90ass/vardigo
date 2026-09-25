@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../../features/candidates/presentation/views/employer_candidates_page.dart';
 import '../../features/offers/presentation/views/worker_offers_page.dart';
-import 'route_names.dart';
+import '../constants/route_names.dart';
 
-/// Centralized Application Routing configuration.
+export '../constants/route_names.dart' show RouteNames;
+
+// This is Centralized Application Routing configuration.
 abstract final class AppRoutes {
   static const String initial = RouteNames.employerCandidates;
 

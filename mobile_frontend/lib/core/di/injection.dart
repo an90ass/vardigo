@@ -1,0 +1,13 @@
+import 'package:get_it/get_it.dart';
+import '../network/api_interface.dart';
+import '../network/dio_client.dart';
+
+
+final GetIt getIt = GetIt.instance;
+
+
+Future<void> setupServiceLocator() async {
+  // Core Network Layer
+  getIt.registerLazySingleton<DioClient>(() => DioClient());
+  getIt.registerLazySingleton<API>(() => getIt<DioClient>());
+}
