@@ -5,6 +5,14 @@ env/
 __pycache__/
 *.pyc
 
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+sqlite_vardigo.db
+backend/sqlite_vardigo.db
+
 # IDEs & Editors
 .idea/
 .vscode/
