@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import Base, engine, SessionLocal
 from app.services.seed_service import SeedService
 from app.routes import auth_router
+from app.routes import candidate_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -44,8 +45,7 @@ app.add_middleware(
 
 # Register API Routers under /api
 app.include_router(auth_router)
-
-
+app.include_router(candidate_router)
 @app.get("/")
 def read_root():
     return {"ok": True, "message": "Vardigo API Service Running"}
