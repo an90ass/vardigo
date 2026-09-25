@@ -10,6 +10,11 @@ class OfferStatus(str, Enum):
     REJECTED = "rejected"
     EXPIRED = "expired"
 
+class OfferStatusFilter(str, Enum):
+    PENDING = "pending"
+    ANSWERED = "answered"
+    EXPIRED = "expired"
+
 class CandidateTab(str, Enum):
     PERFECT = "perfect"
     SIMILAR = "similar"
