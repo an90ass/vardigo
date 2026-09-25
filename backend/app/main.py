@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import Base, engine, SessionLocal
 from app.services.seed_service import SeedService
+from app.routes import auth_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,6 +41,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register API Routers under /api
+app.include_router(auth_router)
+
 
 @app.get("/")
 def read_root():
