@@ -1,0 +1,21 @@
+# Environment & Virtual Environments
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# IDEs & Editors
+.idea/
+.vscode/
+*.iml
+
+# Flutter / Dart build artifacts
+.dart_tool/
+.packages
+build/
+ephemeral/
+
+# Operating System files
+.DS_Store
+Thumbs.db

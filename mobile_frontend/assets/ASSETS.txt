@@ -1,0 +1,9 @@
+assets/
+  photos/     merve.png  derya.png  ayse.png  ferhat.png     (56×56 dairede kullan)
+  logos/      zarif.svg  horizon.svg  phoenix.svg            (56×56 daire)
+  icons/      back help sort star shield pin send online
+              levels money date close check eye alarm
+
+SVG ikonların bir kısmı tek renk maske içindir (star, send, close, check, eye, back, help, sort, pin, money).
+Renk: ilgili sayfa spec’indeki hex. CSS mask veya currentColor.
+PNG’leri yeniden sıkıştırmana gerek yok; avatar olarak object-fit: cover.
