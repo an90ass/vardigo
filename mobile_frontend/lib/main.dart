@@ -1,49 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'core/constants/app_dimensions.dart';
+import 'core/theme/app_theme.dart';
 
 void main() {
-  runApp(const Vardigo());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const VardigoApp());
 }
 
-class Vardigo extends StatelessWidget {
-  const Vardigo({super.key});
+class VardigoApp extends StatelessWidget {
+  const VardigoApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Vardigo',
-      
-      home: const Home(title: 'Vardigo'),
+    return ScreenUtilInit(
+      designSize: AppDimensions.designSize,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Vardigo',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          home: const AppEntryScaffold(),
+        );
+      },
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
 
-  final String title;
+class AppEntryScaffold extends StatelessWidget {
+  const AppEntryScaffold({super.key});
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Vardigo Case Çalışması',
+    const screenContent = Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Text(
+            'Vardigo Mobile App',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-          ],
+          ),
         ),
       ),
     );
+
+
+   
+
+    return screenContent;
   }
 }
