@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/constants/app_dimensions.dart';
+import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
 
 void main() {
@@ -22,36 +24,11 @@ class VardigoApp extends StatelessWidget {
           title: 'Vardigo',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          home: const AppEntryScaffold(),
+          initialRoute: AppRoutes.initial,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+          
         );
       },
     );
-  }
-}
-
-
-class AppEntryScaffold extends StatelessWidget {
-  const AppEntryScaffold({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    const screenContent = Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Text(
-            'Vardigo Mobile App',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-
-
-   
-
-    return screenContent;
   }
 }
