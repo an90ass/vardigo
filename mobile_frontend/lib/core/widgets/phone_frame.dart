@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class PhoneFrame extends StatelessWidget {
@@ -19,7 +21,8 @@ class PhoneFrame extends StatelessWidget {
 
     final screenSize = MediaQuery.of(context).size;
     final isWiderScreen = screenSize.width > 450 || screenSize.height > 920;
-    final shouldShowFrame = envForceFrame || isWiderScreen;
+    final isDesktopOrWeb = kIsWeb || (!Platform.isAndroid && !Platform.isIOS);
+    final shouldShowFrame = envForceFrame || (isDesktopOrWeb && isWiderScreen);
 
     if (!shouldShowFrame) {
       return child;
