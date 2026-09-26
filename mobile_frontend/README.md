@@ -85,13 +85,13 @@ feature_name/
 
 ### 4. Görüşme Talepleri Modülü (Screen 2 - İş Arayan Görünümü)
 * **Temiz Mimari (Clean Architecture):** `OfferEntity`, `GetOffersUseCase`, `GetOfferDetailUseCase`, `AcceptOfferUseCase`, `RejectOfferUseCase`, `CreateOffersUseCase` ve `OfferRepository` katmanları.
-* **Durum Yönetimi (OfferBloc):** *Bekleyen (3)*, *Cevaplanan (1)* ve *Süresi Dolan (0)* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`) ve `AppLogger` entegrasyonu.
+* **Durum Yönetimi (OfferBloc):** *Bekleyen (3)*, *Cevaplanan (1)* ve *Süresi Dolan (0)* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`), detay getirme yönetimi (`FetchOfferDetailEvent`) ve `AppLogger` entegrasyonu.
 * **Sıralama Seçenekleri (Sort Bottom Sheet):** *Önerilen*, *Ücret (En Yüksek)* ve *Kalan Süre (En Acil)* sıralama seçenekleri. Seçilen seçeneğe tekrar dokunulduğunda varsayılan sıralamaya dönen toggle mekanizması.
 * **Teklif Kartı (Figma Uyumlu):**
   * Şirket logosu gösterimi (SVG desteği ve güvenli fallback mekanizması).
   * Kalan süre sayacı (Son 24 saat kalan teklifler için kırmızı/turuncu aciliyet vurgusu).
   * Teklif aksiyonları (*İlgilenmiyorum* ve *İlgileniyorum* butonları).
-  * Genişletilebilir detay alanı (*Detayları Gör* / *Detayları Gizle*) ile şehir, şube ve ek notların görüntülenmesi.
+  * Akıcı ve animasyonlu genişletilebilir detay alanı (`AnimatedCrossFade`) ile konum, şube, görüşme saati ve ek notların düzenli gösterimi.
 * **Ağ Entegrasyonu:** `GET /api/offers`, `GET /api/offers/{id}`, `POST /api/offers/{id}/accept`, `POST /api/offers/{id}/reject` ve `POST /api/offers`.
 
 ### 5. Merkezi Tasarım Sistemi ve Metin Yönetimi (Design Tokens & Localization Ready)
@@ -103,7 +103,7 @@ feature_name/
 
 ## Test ve Kalite Güvencesi (Testing & QA)
 
-Projede iş mantığı, durum yönetimi ve veri ayrıştırma süreçleri için kapsamlı Unit ve BLoC testleri yazılmıştır (35/35 test başarılı).
+Projede iş mantığı, durum yönetimi ve veri ayrıştırma süreçleri için kapsamlı Unit ve BLoC testleri yazılmıştır (36/36 test başarılı).
 
 * **Core & Network:** `ApiResponseParserTest` (API envelope ayrıştırma, hata fırlatma senaryoları).
 * **Auth Modülü:** `AuthBlocTest` (Initial state, oturum kontrolü, başarılı/başarısız giriş ve çıkış senaryoları).

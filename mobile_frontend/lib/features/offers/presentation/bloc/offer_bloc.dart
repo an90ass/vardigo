@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/app_logger.dart';
 import '../../domain/usecases/accept_offer_usecase.dart';
+import '../../domain/usecases/get_offer_detail_usecase.dart';
 import '../../domain/usecases/get_offers_usecase.dart';
 import '../../domain/usecases/reject_offer_usecase.dart';
 import 'offer_event.dart';
@@ -11,15 +12,18 @@ export 'offer_state.dart';
 
 class OfferBloc extends Bloc<OfferEvent, OfferState> {
   final GetOffersUseCase getOffersUseCase;
+  final GetOfferDetailUseCase getOfferDetailUseCase;
   final AcceptOfferUseCase acceptOfferUseCase;
   final RejectOfferUseCase rejectOfferUseCase;
 
   OfferBloc({
     required this.getOffersUseCase,
+    required this.getOfferDetailUseCase,
     required this.acceptOfferUseCase,
     required this.rejectOfferUseCase,
   }) : super(const OfferState()) {
     on<FetchOffers>(_onFetchOffers);
+    on<FetchOfferDetailEvent>(_onFetchOfferDetail);
     on<ChangeOfferFilter>(_onChangeOfferFilter);
     on<AcceptOfferEvent>(_onAcceptOffer);
     on<RejectOfferEvent>(_onRejectOffer);
@@ -53,6 +57,28 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           offers: data.offers,
           pendingCount: data.pendingCount,
         ));
+      },
+    );
+  }
+
+  Future<void> _onFetchOfferDetail(
+    FetchOfferDetailEvent event,
+    Emitter<OfferState> emit,
+  ) async {
+    AppLogger.d('[OfferBloc] Fetching offer detail: ${event.offerId}');
+    final result = await getOfferDetailUseCase(event.offerId);
+
+    result.fold(
+      (failure) {
+        AppLogger.e('[OfferBloc] Fetch offer detail failed: ${failure.message}');
+      },
+      (detailedOffer) {
+        AppLogger.i('[OfferBloc] Offer detail loaded for ${event.offerId}');
+        final updatedOffers = state.offers.map((offer) {
+          return offer.id == detailedOffer.id ? detailedOffer : offer;
+        }).toList();
+
+        emit(state.copyWith(offers: updatedOffers));
       },
     );
   }

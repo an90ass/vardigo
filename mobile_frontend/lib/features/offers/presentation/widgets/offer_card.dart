@@ -14,6 +14,7 @@ class OfferCard extends StatefulWidget {
   final bool isProcessing;
   final VoidCallback? onAccept;
   final VoidCallback? onReject;
+  final VoidCallback? onFetchDetail;
 
   const OfferCard({
     super.key,
@@ -21,6 +22,7 @@ class OfferCard extends StatefulWidget {
     this.isProcessing = false,
     this.onAccept,
     this.onReject,
+    this.onFetchDetail,
   });
 
   @override
@@ -54,7 +56,14 @@ class _OfferCardState extends State<OfferCard> {
           ],
           const SizedBox(height: AppDimensions.gap12),
           _buildDetailsButton(context),
-          if (_isExpanded) _buildExpandedDetails(context),
+          AnimatedCrossFade(
+            firstChild: const SizedBox.shrink(),
+            secondChild: _buildExpandedDetails(context),
+            crossFadeState: _isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 200),
+          ),
           if (widget.offer.isPending) ...[
             const SizedBox(height: AppDimensions.gap10),
             _buildCountdownRow(context),
@@ -357,8 +366,12 @@ class _OfferCardState extends State<OfferCard> {
 
     return InkWell(
       onTap: () {
+        final nextState = !_isExpanded;
+        if (nextState && (widget.offer.city == null || widget.offer.note == null)) {
+          widget.onFetchDetail?.call();
+        }
         setState(() {
-          _isExpanded = !_isExpanded;
+          _isExpanded = nextState;
         });
       },
       borderRadius: BorderRadius.circular(AppDimensions.radius8),
@@ -400,31 +413,95 @@ class _OfferCardState extends State<OfferCard> {
 
   Widget _buildExpandedDetails(BuildContext context) {
     final textTheme = context.textTheme;
+    final city = widget.offer.city ?? 'İstanbul';
+    final note = widget.offer.note ?? 'Şube: Sinanpaşa Mah.';
 
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: AppDimensions.gap10),
       padding: const EdgeInsets.all(AppDimensions.gap12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F7F7),
+        color: const Color(0xFFF9FAFB),
         borderRadius: BorderRadius.circular(AppDimensions.radius8),
+        border: Border.all(color: AppColors.stroke, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${widget.offer.place} bünyesinde ${widget.offer.title} pozisyonu için ${widget.offer.district} lokasyonunda görüşme teklifidir.',
-            style: textTheme.bodySmall?.copyWith(
-              color: AppColors.slate700,
-              height: 1.4,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                AppIconEnum.pin.svgPath,
+                width: AppDimensions.iconSize16,
+                height: AppDimensions.iconSize16,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.gray500,
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(width: AppDimensions.gap6),
+              Expanded(
+                child: Text(
+                  '${widget.offer.place} · ${widget.offer.district}, $city',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: AppColors.strong,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppDimensions.gap6),
-          Text(
-            'Çalışma Saati: ${widget.offer.when} · Ücret: ${widget.offer.pay}',
-            style: textTheme.bodySmall?.copyWith(
-              color: AppColors.gray500,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                AppIconEnum.shield.svgPath,
+                width: AppDimensions.iconSize16,
+                height: AppDimensions.iconSize16,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.primary,
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(width: AppDimensions.gap6),
+              Expanded(
+                child: Text(
+                  note,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.gap6),
+          Row(
+            children: [
+              SvgPicture.asset(
+                AppIconEnum.date.svgPath,
+                width: AppDimensions.iconSize16,
+                height: AppDimensions.iconSize16,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.gray500,
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(width: AppDimensions.gap6),
+              Expanded(
+                child: Text(
+                  'Görüşme Zamanı: ${widget.offer.when}',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: AppColors.sub,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -353,6 +353,9 @@ class _WorkerOffersPageState extends State<WorkerOffersPage> {
             key: ValueKey(offer.id),
             offer: offer,
             isProcessing: isProcessing,
+            onFetchDetail: () {
+              context.read<OfferBloc>().add(FetchOfferDetailEvent(offer.id));
+            },
             onAccept: () {
               context.read<OfferBloc>().add(AcceptOfferEvent(offer.id));
             },

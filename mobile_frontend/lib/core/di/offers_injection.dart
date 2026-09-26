@@ -38,6 +38,7 @@ void initOffersInjection(GetIt sl) {
   sl.registerFactory<OfferBloc>(
     () => OfferBloc(
       getOffersUseCase: sl<GetOffersUseCase>(),
+      getOfferDetailUseCase: sl<GetOfferDetailUseCase>(),
       acceptOfferUseCase: sl<AcceptOfferUseCase>(),
       rejectOfferUseCase: sl<RejectOfferUseCase>(),
     ),
