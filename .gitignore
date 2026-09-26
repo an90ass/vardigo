@@ -17,12 +17,25 @@ backend/sqlite_vardigo.db
 .idea/
 .vscode/
 *.iml
+*.ipr
+*.iws
 
-# Flutter / Dart build artifacts
+# Flutter / Dart build artifacts & caches
 .dart_tool/
 .packages
+.pub/
+.pub-cache/
+.flutter-plugins
+.flutter-plugins-dependencies
 build/
+**/build/
 ephemeral/
+**/ios/Flutter/.last_build_id
+**/android/.gradle
+**/android/captures/
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
 
 # Operating System files
 .DS_Store

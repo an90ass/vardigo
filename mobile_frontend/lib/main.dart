@@ -1,49 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'core/constants/app_dimensions.dart';
+import 'core/di/injection.dart';
+import 'core/routes/app_routes.dart';
+import 'core/theme/app_theme.dart';
 
-void main() {
-  runApp(const Vardigo());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await setupServiceLocator();
+  runApp(const VardigoApp());
 }
 
-class Vardigo extends StatelessWidget {
-  const Vardigo({super.key});
+class VardigoApp extends StatelessWidget {
+  const VardigoApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Vardigo',
-      
-      home: const Home(title: 'Vardigo'),
-    );
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Vardigo Case Çalışması',
-            ),
-          ],
-        ),
-      ),
+    return ScreenUtilInit(
+      designSize: AppDimensions.designSize,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Vardigo',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          initialRoute: AppRoutes.initial,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+         
+        );
+      },
     );
   }
 }

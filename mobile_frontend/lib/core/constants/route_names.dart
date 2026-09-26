@@ -1,0 +1,7 @@
+// This is Centralized Route Names constants for the application.
+abstract final class RouteNames {
+  static const String initial = '/';
+  static const String login = '/login';
+  static const String employerCandidates = '/employer-candidates';
+  static const String workerOffers = '/worker-offers';
+}
