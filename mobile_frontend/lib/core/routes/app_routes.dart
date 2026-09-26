@@ -4,6 +4,7 @@ import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/views/login_page.dart';
 import '../../features/candidates/presentation/bloc/candidate_bloc.dart';
 import '../../features/candidates/presentation/views/employer_candidates_page.dart';
+import '../../features/offers/presentation/bloc/offer_bloc.dart';
 import '../../features/offers/presentation/views/worker_offers_page.dart';
 import '../constants/route_names.dart';
 import '../di/injection.dart';
@@ -37,7 +38,10 @@ abstract final class AppRoutes {
       case RouteNames.workerOffers:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const WorkerOffersPage(),
+          builder: (_) => BlocProvider<OfferBloc>(
+            create: (_) => getIt<OfferBloc>()..add(const FetchOffers()),
+            child: const WorkerOffersPage(),
+          ),
         );
 
       default:

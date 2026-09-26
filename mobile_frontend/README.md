@@ -83,6 +83,11 @@ feature_name/
 * **Aday Kartı (Figma Uyumlu):** 56×56 avatar, online durum noktası, eşleşme yüzdesi rozeti (`%92`), puan, katılım oranı ve mesafe bilgileri.
 * **Çoklu Seçim:** Checkbox ile aday seçimi ve yapışkan alt çubuktan (*Sticky Bottom Bar*) aday seçim kontrolü.
 
+### 4. Görüşme Talepleri Modülü (Screen 2 - İş Arayan Görünümü)
+* **Temiz Mimari (Clean Architecture):** `OfferEntity`, `GetOffersUseCase`, `AcceptOfferUseCase`, `RejectOfferUseCase`, `CreateOffersUseCase` ve `OfferRepository` katmanları.
+* **Durum Yönetimi (OfferBloc):** *Bekleyenler*, *Cevaplananlar* ve *Süresi Dolanlar* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`) ve `AppLogger` entegrasyonu.
+* **Ağ Entegrasyonu:** `GET /api/offers`, `POST /api/offers/{id}/accept`, `POST /api/offers/{id}/reject` ve `POST /api/offers`.
+
 ---
 
 ## Kurulum ve Çalıştırma
