@@ -1,0 +1,40 @@
+============================================================
+VARDIGO CASE STUDY — SUREC NOTU
+============================================================
+
+1. KULLANILAN ARACLAR VE TEKNOLOJILER
+------------------------------------------------------------
+- Mobil: Flutter 3.44.4 (Dart 3.12.2), flutter_bloc (State Management), dartz (Functional Error Handling), get_it (DI), dio (Ağ katmanı), flutter_screenutil (390×844 Figma Responsive).
+- Backend: Python 3.11 (FastAPI, MVC Mimarisi, SQLite + SQLAlchemy ORM, Docker & Compose), Pydantic v2, Uvicorn, Pytest.
+- Yapay Zeka & Asistan: Google Antigravity (Gemini 2.5 Pro) pair-programming asistanı olarak mimari planlama, token analizi ve test senaryolarının inşasında kullanıldı.
+- Tasarım Araçları: Canva (Adaptive icon ve Splash safe-zone boyutlandırma).
+
+2. GELISME SIRASI VE ADIMLAR
+------------------------------------------------------------
+1. Backend & Veri Altyapisi (FastAPI + Docker):
+   Ilk adimda backend servisi insa edildi. SQLite ve SQLAlchemy ile seed verisi kalici hale getirildi, unvan/sehir/sektor agirlikli eslestirme motoru (>=80 puan kurali), REST uclari ve Dockerfile/Compose yapilandirildi.
+2. Mobil Temel & Design Tokens (Figma 390×844):
+   Urbanist tipografisi, Figma renk paleti ve boyut token'lari (AppDimensions, AppColors) cikarildi. DioClient (3x retry, token interceptor) ve GetIt DI kuruldu.
+3. Mimari Kurgu (Feature-Based Clean Architecture):
+   Isveren ve Is Arayan rollerinin bagimsiz calisabilmesi icin features (auth, candidates, offers) altinda domain/data/presentation katmanlari olusturuldu.
+4. Sayfa 1 — Eslesen Personeller (Isveren Gorunumu):
+   Segmented tabs (Tam Eslesen / Benzer), siralama filtreleri, aday karti (56px avatar, rozet, puan), coklu secim ve Sticky Bottom Bar gelistirildi.
+5. Sayfa 2 — Gorusme Talepleri (Is Arayan Gorunumu):
+   3 sekmeli durum filtreleme (Bekleyen, Cevaplanan, Suresi Dolan), dinamik SVG logolar, acil durum geri sayim sayaci, AnimatedCrossFade detay acilisi ve Sort Bottom Sheet gelistirildi.
+6. Testler, Cilalama & Teslimat:
+   36 birim ve durum yonetimi testi yazildi (36/36 passed), PhoneFrame (390×844 Bezel + Dynamic Island), adaptive launcher icon ve native splash entegre edildi.
+
+3. KARSILASILAN ZORLUKLAR VE COZUMLER
+------------------------------------------------------------
+- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme:
+  Sorun: Standart logolar Android 12+ 160dp dairesel guvenli alan sebebiyle kirpiliyordu.
+  Cozum: Canva ile %60 guvenli alan payi birakilarak vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile cozuldu.
+- Siralama (Sort) Toggle-to-Reset Davranisi:
+  Sorun: Secili filtreye tekrar dokunuldugunda varsayilan siralamaya donme ihtiyaci.
+  Cozum: Tiklanan filtre zaten aktifse varsayilana resetleyen cift yonlu toggle state mantigi uygulandi.
+
+4. BILEREK YAPILMAYANLAR / TERCIHLER
+------------------------------------------------------------
+- build_runner / json_serializable: Kod kalabaligini onlemek ve tam tip guvenligi saglamak adina temiz manuel serilestirme tercih edildi.
+- Kod Ici Yorum Satirlari: Kodun kendini aciklamasi (Clean Code) ilkesi geregi dart dosyalarinda gereksiz yorumlardan kacinildi.
+- Fazladan Auth Ekrani: Case akisina sadik kalinarak tek dokunusla rol degistiren sade mock auth tercih edildi.

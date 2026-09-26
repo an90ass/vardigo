@@ -1,0 +1,57 @@
+============================================================
+VARDIGO CASE STUDY — TEST VE KULLANIM SENARYOLARI KILAVUZU
+============================================================
+
+Bu kılavuz, VardiGO mobil uygulamasının ve backend servisinin 
+iş kurallarını ve uçtan uca senaryolarını test etmek için hazırlanmıştır.
+
+------------------------------------------------------------
+SENARYO 1: İŞVEREN AKIŞI (Aday Listeleme & Teklif Gönderme)
+------------------------------------------------------------
+1. Uygulamayı başlatın (Standart veya 'REFERENCE_FRAME=true' ile).
+2. Giriş ekranında "İşveren Girişi (Zarif Cheff Restoran)" butonuna dokunun.
+3. Sayfa 1 (Eşleşen Personeller) açılacaktır:
+   - "Tam Eşleşen" ve "Benzer Personeller" sekmeleri arasında geçiş yapın.
+   - "Sırala: Önerilen", "En Yakın" veya "Puan" filtrelerini deneyin.
+   - Listeden "Merve Y." adayının checkbox'ını seçin (veya birden fazla aday seçin).
+   - Ekranın altındaki "Görüşme Talebi Gönder (1)" butonuna dokunun.
+4. Başarılı bildirim SnackBar mesajı görüntülenecektir:
+   "1 adaya görüşme talebi başarıyla gönderildi"
+
+------------------------------------------------------------
+SENARYO 2: İŞ ARAYAN AKIŞI (Kişiselleştirilmiş Teklifler & Yanıtlama)
+------------------------------------------------------------
+1. Sağ üstteki çıkış butonuna dokunarak giriş ekranına dönün.
+2. "İş Arayan Girişi (Merve Y.)" seçeneğine dokunun.
+3. Sayfa 2 (Görüşme Talepleri) açılacaktır:
+   - Sadece Merve Y.'ye gönderilen özel görüşme talepleri listelenir.
+   - Karta dokunarak 'AnimatedCrossFade' ile detay alanını açın (şube, saat, notlar).
+   - "Sırala" butonuna basarak "Ücret (En Yüksek)" veya "Kalan Süre" sıralamasını test edin.
+   - Acil olan tekliflerde 24 saat altı geri sayım sayacını inceleyin.
+   - "İlgileniyorum" (Kabul) veya "İlgilenmiyorum" (Ret) butonuna dokunun.
+4. İşlem sonrası teklif "Cevaplanan" sekmesine taşınır ve yeşil/kırmızı durum rozeti alır.
+
+------------------------------------------------------------
+SENARYO 3: İŞ KURALI TESTİ (Açık Teklif Çakışması / 409 Conflict)
+------------------------------------------------------------
+1. Merve Y.'nin bekleyen açık bir teklifi varken tekrar İşveren olarak giriş yapın.
+2. "Merve Y." adayını seçip tekrar "Görüşme Talebi Gönder" butonuna dokunun.
+3. Sistem mükerrer teklifi engeller ve kullanıcı dostu şu uyarıyı gösterir:
+   "Merve Y. adlı adaya zaten açık bir görüşme talebi bulunmaktadır."
+4. Merve Y. teklifi kabul veya ret ettikten sonra işveren tekrar yeni bir teklif gönderebilir.
+
+------------------------------------------------------------
+SENARYO 4: OTOMATİK BİRİM VE BLOC TESTLERİ
+------------------------------------------------------------
+Mobil Birim ve Durum Yönetimi Testleri (36/36 Passed):
+  cd mobile_frontend
+  flutter test
+
+Mobil Statik Kod Analizi (0 Issue):
+  cd mobile_frontend
+  flutter analyze
+
+Backend Servis ve Eşleştirme Motoru Testleri:
+  cd backend
+  pytest
+============================================================
