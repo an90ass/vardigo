@@ -34,15 +34,19 @@ API_BASE_URL=http://10.0.2.2:8000
 
 ### 3. Uygulamayı Başlatın
 
-* **Standart Native Mobil Olarak:**
-  ```bash
-  flutter run
-  ```
-
-* **Referans Telefon Çerçevesi (390×844 Bezel + Dynamic Island) ile:**
+* **Seçenek 1: Referans Telefon Çerçevesi ile (Web / Chrome veya Emülatör):**
   Figma referans tasarımındaki iPhone 390×844 boyutlarını, siyah çerçeveyi, Dynamic Island'ı ve 9:41 durum çubuğunu simüle etmek için:
   ```bash
+  # Web / Chrome üzerinde:
+  flutter run -d chrome --dart-define=REFERENCE_FRAME=true
+
+  # Emülatör üzerinde çerçeve ile:
   flutter run --dart-define=REFERENCE_FRAME=true
+  ```
+
+* **Seçenek 2: Standart Native Tam Ekran Olarak (Android Emülatör / iOS Simülatör):**
+  ```bash
+  flutter run
   ```
 
 ---
@@ -51,7 +55,7 @@ API_BASE_URL=http://10.0.2.2:8000
 > ### Giriş ve Rol Seçimi (Test Hesapları)
 > Uygulama açılış ekranında tek dokunuşla rol seçilerek anında ilgili ekrana geçiş yapılır:
 > * **İşveren (Employer):** *Zarif Cheff Restoran* rolü seçilerek **Sayfa 1 — Eşleşen Personeller** ekranına girilir. Adaylar listelenir, filtrelenir ve çoklu seçimle görüşme talebi gönderilebilir.
-> * **İş Arayan (Worker):** *Merve Y.* rolü seçilerek **Sayfa 2 — Görüşme Talepleri** ekranına girilir. Gelen talepler incelenir, detayları açılır ve kabul/ret aksiyonları verilebilir.
+> * **İş Arayan (Worker):** *Aday Demo Profili* rolü seçilerek **Sayfa 2 — Görüşme Talepleri** ekranına girilir. Gelen talepler incelenir, detayları açılır ve kabul/ret aksiyonları verilebilir.
 > * **Oturum Kalıcılığı:** Seçilen rol `FlutterSecureStorage` ile kalıcı olarak saklanır. Çıkış yapmak veya rol değiştirmek için ekranın üst kısmındaki çıkış butonuna dokunabilirsiniz.
 
 ---
