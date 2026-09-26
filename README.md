@@ -194,7 +194,15 @@ Proje, **Feature-Based Clean Architecture** prensiplerine göre inşa edilmişti
 2. **Saf İş Mantığı & 100% Test Edilebilirlik:** `domain/` katmanında hiçbir UI veya üçüncü parti kütüphane bağımlılığı bulunmaz; tüm iş kuralları saf Dart birim testleriyle (`36/36 passed`) doğrulanabilir.
 3. **Modüler Genişleyebilirlik:** Yeni eklenecek özellikler mevcut kod tabanına dokunmadan tak-çıkar mantığıyla eklenebilir.
 
+
+
+
 ### Ekranlar ve Fonksiyonlar
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/39bf9407-70d5-4445-a69a-7305c5bb6e82" width="390" controls></video>
+  <br>
+  <em><strong>Uçtan Uca Demo Akışı:</strong> İşveren ekranında aday filtreleme, çoklu seçim ve bekleyen teklifi olmayan adaylara toplu teklif gönderimi &rarr; İş arayan profilinde bekleyen tekliflerin incelenmesi ve kabul/ret yanıtlarının verilmesi. (Not: Genişletilebilir "Detayları Gör" alanı bu kısa kayıtta yer almamaktadır.)</em>
+</p>
 
 #### 1. Sayfa 1 — Eşleşen Personeller (İşveren Görünümü — `/candidates`)
 * **Segmented Tabs:** *%100 Eşleşme* ve *Benzer Personeller* sekmeleri arasında backend filtrelemesi (`tab=perfect` / `tab=similar`).
