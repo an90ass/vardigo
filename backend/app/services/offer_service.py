@@ -166,3 +166,13 @@ class OfferService:
         self.repo.commit()
         return self._to_schema(offer_orm)
 
+    def get_offer_detail(self, offer_id: str) -> dict:
+        offer_orm = self.repo.get_by_id(offer_id)
+        if not offer_orm:
+            raise KeyError("Teklif bulunamadı.")
+        schema = self._to_schema(offer_orm)
+        data = schema.model_dump()
+        data["city"] = "İstanbul"
+        data["note"] = "Şube: Sinanpaşa Mah."
+        return data
+

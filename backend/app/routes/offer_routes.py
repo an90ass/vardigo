@@ -98,3 +98,22 @@ def reject_offer(
                 error=ErrorDetail(code="OFFER_STATE_ERROR", message=str(ve))
             ).model_dump()
         )
+
+
+@router.get("/{offer_id}", response_model=ApiResponse[dict], response_model_exclude_none=True)
+def get_offer_detail(
+    offer_id: str,
+    _role: UserRole = Depends(require_worker),
+    offer_service: OfferService = Depends(get_offer_service)
+):
+    try:
+        data = offer_service.get_offer_detail(offer_id)
+        return ApiResponse(data=data)
+    except KeyError as ke:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content=ApiResponse(
+                ok=False,
+                error=ErrorDetail(code="OFFER_NOT_FOUND", message=str(ke))
+            ).model_dump()
+        )
