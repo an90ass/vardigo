@@ -3,20 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/enums/app_enums.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/custom_card_container.dart';
 import '../bloc/auth_bloc.dart';
-
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: _handleAuthStateListener,
@@ -54,7 +51,7 @@ class LoginPage extends StatelessWidget {
 
       Navigator.pushReplacementNamed(context, destination);
     } else if (state is AuthError) {
-      final errorColor = Theme.of(context).colorScheme.error;
+      final errorColor = context.colorScheme.error;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -67,15 +64,13 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-
 class _LoginHeader extends StatelessWidget {
   const _LoginHeader();
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
+    final colorScheme = context.colorScheme;
+    final textTheme = context.textTheme;
 
     return Column(
       children: [
@@ -98,7 +93,6 @@ class _LoginHeader extends StatelessWidget {
   }
 }
 
-
 class _LoadingView extends StatelessWidget {
   final bool isCheckingSession;
 
@@ -106,9 +100,9 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
+    final colorScheme = context.colorScheme;
+    final textTheme = context.textTheme;
+    final customColors = context.customColors;
 
     return Center(
       child: Padding(
@@ -140,10 +134,10 @@ class _LoadingView extends StatelessWidget {
             const SizedBox(height: AppDimensions.iconTextGap),
             Text(
               isCheckingSession
-                  ? 'Kayıtlı oturumunuz doğrulanıyor 🔒'
-                  : 'Profiliniz ve oturumunuz hazırlanıyor ✨',
+                  ? 'Kayıtlı oturumunuz doğrulanıyor '
+                  : 'Profiliniz ve oturumunuz hazırlanıyor',
               style: textTheme.bodySmall?.copyWith(
-                color: AppColors.slate500,
+                color: customColors.slate500,
               ),
               textAlign: TextAlign.center,
             ),
@@ -154,9 +148,6 @@ class _LoadingView extends StatelessWidget {
   }
 }
 
-// ==========================================
-// 3. Role Selection Section Component
-// ==========================================
 class _RoleSelectionSection extends StatelessWidget {
   const _RoleSelectionSection();
 
@@ -190,9 +181,6 @@ class _RoleSelectionSection extends StatelessWidget {
   }
 }
 
-// ==========================================
-// 4. Reusable Role Card Component
-// ==========================================
 class _RoleCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -208,9 +196,9 @@ class _RoleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
+    final colorScheme = context.colorScheme;
+    final textTheme = context.textTheme;
+    final customColors = context.customColors;
 
     return CustomCardContainer(
       onTap: onTap,
@@ -221,7 +209,7 @@ class _RoleCard extends StatelessWidget {
             width: AppDimensions.squareButtonSize,
             height: AppDimensions.squareButtonSize,
             decoration: BoxDecoration(
-              color: AppColors.primaryLighter,
+              color: customColors.selectedCardBg,
               borderRadius: BorderRadius.circular(AppDimensions.controlRadius),
             ),
             child: Icon(
@@ -251,7 +239,7 @@ class _RoleCard extends StatelessWidget {
           ),
           Icon(
             Icons.chevron_right,
-            color: AppColors.slate500,
+            color: customColors.slate500,
             size: AppDimensions.squareButtonIconSize,
           ),
         ],
