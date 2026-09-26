@@ -1,5 +1,3 @@
-
-// API Authentication scheme types
 enum ApiAuthType {
   bearerToken,
   none,

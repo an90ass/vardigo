@@ -8,6 +8,8 @@ abstract class OfferRepository {
     OfferStatusFilter? filter,
   });
 
+  Future<Either<Failure, OfferEntity>> getOfferDetail(String offerId);
+
   Future<Either<Failure, OfferEntity>> acceptOffer(String offerId);
 
   Future<Either<Failure, OfferEntity>> rejectOffer(String offerId);

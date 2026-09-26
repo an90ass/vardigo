@@ -14,6 +14,8 @@ class OfferEntity extends Equatable {
   final OfferStatus status;
   final String expiresAt;
   final String? remain;
+  final String? city;
+  final String? note;
 
   const OfferEntity({
     required this.id,
@@ -28,6 +30,8 @@ class OfferEntity extends Equatable {
     required this.status,
     required this.expiresAt,
     this.remain,
+    this.city,
+    this.note,
   });
 
   bool get isPending => status == OfferStatus.pending;
@@ -49,6 +53,8 @@ class OfferEntity extends Equatable {
         status,
         expiresAt,
         remain,
+        city,
+        note,
       ];
 }
 
