@@ -32,6 +32,10 @@ class Authenticated extends AuthState {
   List<Object?> get props => [role, token, user];
 }
 
+class Unauthenticated extends AuthState {
+  const Unauthenticated();
+}
+
 class AuthError extends AuthState {
   final String message;
 

@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../utils/app_logger.dart';
 
 
 abstract final class TokenStorage {
@@ -19,17 +19,22 @@ abstract final class TokenStorage {
     _memoryToken = token;
     try {
       await _storage.write(key: _keyToken, value: token);
+      AppLogger.i('[TokenStorage] Token saved successfully (${token.length} chars)');
     } catch (e) {
-      debugPrint('[TokenStorage] Secure storage write warning (using memory fallback): $e');
+      AppLogger.w('[TokenStorage] Secure storage write warning (using memory fallback): $e');
     }
   }
 
   static Future<String?> getToken() async {
     try {
       final token = await _storage.read(key: _keyToken);
-      return token ?? _memoryToken;
+      final resolved = token ?? _memoryToken;
+      if (resolved != null) {
+        AppLogger.d('[TokenStorage] Retrieved token from storage');
+      }
+      return resolved;
     } catch (e) {
-      debugPrint('[TokenStorage] Secure storage read warning (using memory fallback): $e');
+      AppLogger.w('[TokenStorage] Secure storage read warning (using memory fallback): $e');
       return _memoryToken;
     }
   }
@@ -38,8 +43,9 @@ abstract final class TokenStorage {
     _memoryRole = role;
     try {
       await _storage.write(key: _keyRole, value: role);
+      AppLogger.i('[TokenStorage]  Role saved: $role');
     } catch (e) {
-      debugPrint('[TokenStorage] Secure storage write warning (using memory fallback): $e');
+      AppLogger.w('[TokenStorage] Secure storage write warning (using memory fallback): $e');
     }
   }
 
@@ -48,7 +54,7 @@ abstract final class TokenStorage {
       final role = await _storage.read(key: _keyRole);
       return role ?? _memoryRole;
     } catch (e) {
-      debugPrint('[TokenStorage] Secure storage read warning (using memory fallback): $e');
+      AppLogger.w('[TokenStorage] Secure storage read warning (using memory fallback): $e');
       return _memoryRole;
     }
   }
@@ -58,8 +64,9 @@ abstract final class TokenStorage {
     _memoryRole = null;
     try {
       await _storage.deleteAll();
+      AppLogger.i('[TokenStorage] Session tokens cleared');
     } catch (e) {
-      debugPrint('[TokenStorage] Secure storage clear warning: $e');
+      AppLogger.w('[TokenStorage] Secure storage clear warning: $e');
     }
   }
 }

@@ -32,8 +32,8 @@ class LoginPage extends StatelessWidget {
                   children: [
                     const _LoginHeader(),
                     const SizedBox(height: AppDimensions.pageHorizontalPadding * 2),
-                    if (state is AuthLoading)
-                      const _LoadingView()
+                    if (state is! Unauthenticated && state is! AuthError)
+                      _LoadingView(isCheckingSession: state is AuthInitial)
                     else
                       const _RoleSelectionSection(),
                   ],
@@ -100,7 +100,9 @@ class _LoginHeader extends StatelessWidget {
 
 
 class _LoadingView extends StatelessWidget {
-  const _LoadingView();
+  final bool isCheckingSession;
+
+  const _LoadingView({this.isCheckingSession = false});
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +128,9 @@ class _LoadingView extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.cardPhotoTextGap),
             Text(
-              'Giriş yapılıyor, lütfen bekleyin...',
+              isCheckingSession
+                  ? 'Oturum kontrol ediliyor...'
+                  : 'Giriş yapılıyor, lütfen bekleyin...',
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -135,7 +139,9 @@ class _LoadingView extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.iconTextGap),
             Text(
-              'Profiliniz ve oturumunuz hazırlanıyor ✨',
+              isCheckingSession
+                  ? 'Kayıtlı oturumunuz doğrulanıyor 🔒'
+                  : 'Profiliniz ve oturumunuz hazırlanıyor ✨',
               style: textTheme.bodySmall?.copyWith(
                 color: AppColors.slate500,
               ),

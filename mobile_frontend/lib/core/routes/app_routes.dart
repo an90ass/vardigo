@@ -20,7 +20,7 @@ abstract final class AppRoutes {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider<AuthBloc>(
-            create: (_) => getIt<AuthBloc>(),
+            create: (_) => getIt<AuthBloc>()..add(const CheckAuthStatus()),
             child: const LoginPage(),
           ),
         );

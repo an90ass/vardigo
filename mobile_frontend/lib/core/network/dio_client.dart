@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../enums/app_enums.dart';
 import '../storage/token_storage.dart';
+import '../utils/app_logger.dart';
 import 'api_exception.dart';
 import 'api_interface.dart';
 import 'api_url.dart';
@@ -44,10 +45,15 @@ class DioClient implements API {
             }
           }
 
+          AppLogger.i('[DIO]  ${options.method} ${options.uri}');
           handler.next(options);
         },
-        onResponse: (response, handler) => handler.next(response),
+        onResponse: (response, handler) {
+          AppLogger.i('[DIO]  ${response.statusCode} ${response.requestOptions.path}');
+          return handler.next(response);
+        },
         onError: (error, handler) async {
+          AppLogger.e('[DIO]  ${error.requestOptions.method} ${error.requestOptions.path} -> ${error.type} ${error.message}');
           final requestOptions = error.requestOptions;
           final retries = (requestOptions.extra['retries'] as int? ?? 0);
 

@@ -8,6 +8,12 @@ abstract class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Check if a persisted session exists in TokenStorage.
+class CheckAuthStatus extends AuthEvent {
+  const CheckAuthStatus();
+}
+
+/// Request authentication for a selected role.
 class LoginRequested extends AuthEvent {
   final UserRole role;
 
@@ -17,7 +23,7 @@ class LoginRequested extends AuthEvent {
   List<Object?> get props => [role];
 }
 
-// Switch active user role (from Employer to Worker For the Testing Purposes)
+/// Switch active user role (e.g. from Employer to Worker).
 class SwitchRoleRequested extends AuthEvent {
   final UserRole role;
 
@@ -27,7 +33,7 @@ class SwitchRoleRequested extends AuthEvent {
   List<Object?> get props => [role];
 }
 
-// Auto-initialize authentication with default role (employer).
-class InitializeDefaultAuth extends AuthEvent {
-  const InitializeDefaultAuth();
+/// Logout and clear persisted session from TokenStorage.
+class LogoutRequested extends AuthEvent {
+  const LogoutRequested();
 }
