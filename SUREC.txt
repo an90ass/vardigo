@@ -6,7 +6,7 @@ VARDIGO CASE STUDY — SUREC NOTU
 ------------------------------------------------------------
 - Mobil: Flutter 3.44.4 (Dart 3.12.2), flutter_bloc (State Management), dartz (Functional Error Handling), get_it (DI), dio (Ağ katmanı), flutter_screenutil (390×844 Figma Responsive).
 - Backend: Python 3.11 (FastAPI, MVC Mimarisi, SQLite + SQLAlchemy ORM, Docker & Compose), Pydantic v2, Uvicorn.
-- Yapay Zeka & Asistanlar: Google Antigravity (Gemini 2.5 Pro ve Claude); test dosyalarinin yazilmasi, sabit veri/sablon dosyalarinin olusturulmasi, kod inceleme (code review) ve gelistirme surecini hizlandirmak adina pair-programming asistanlari olarak kullanildi.
+- Yapay Zeka & Asistanlar: Google Antigravity (Gemini 2.5 Pro ve Claude); test dosyalarinin yazilmasi, sabit veri/sablon dosyalarinin olusturulmasi, README ve dokumantasyon dosyalarinin hazirlanmasi, kod inceleme (code review) ve gelistirme surecini hizlandirmak adina pair-programming asistanlari olarak kullanildi.
 - Tasarım Araçları: Canva (Adaptive icon ve Splash safe-zone boyutlandırma).
 
 2. GELISME SIRASI VE ADIMLAR
