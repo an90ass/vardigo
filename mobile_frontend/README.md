@@ -88,6 +88,35 @@ feature_name/
 * **Durum Yönetimi (OfferBloc):** *Bekleyenler*, *Cevaplananlar* ve *Süresi Dolanlar* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`) ve `AppLogger` entegrasyonu.
 * **Ağ Entegrasyonu:** `GET /api/offers`, `POST /api/offers/{id}/accept`, `POST /api/offers/{id}/reject` ve `POST /api/offers`.
 
+### 5. Merkezi Tasarım Sistemi ve Metin Yönetimi (Design Tokens & Localization Ready)
+* **AppDimensions:** Figma spellerine (390×844) birebir uyumlu merkezi padding, radius, ikon ve bileşen boyutları.
+* **AppStrings:** Tüm UI metinlerinin tek bir kaynakta toplandığı ve gelecekte `flutter_localizations` (`.arb`) altyapısına kolayca taşınabilecek mimari yapı.
+* **AppTheme & CustomColors:** `GoogleFonts.urbanist` tipografisi ve Figma renk paletini (`salaryBarBg`, `badgeGreen`, vb.) yöneten ThemeExtension altyapısı.
+
+---
+
+## Test ve Kalite Güvencesi (Testing & QA)
+
+Projede iş mantığı, durum yönetimi ve veri ayrıştırma süreçleri için kapsamlı Unit ve BLoC testleri yazılmıştır.
+
+* **Core & Network:** `ApiResponseParserTest` (API envelope ayrıştırma, hata fırlatma senaryoları).
+* **Auth Modülü:** `AuthBlocTest` (Initial state, oturum kontrolü, başarılı/başarısız giriş ve çıkış senaryoları).
+* **Candidates Modülü:** `CandidateBlocTest` ve `CandidateEntityTest` (Veri yükleme, sekme değiştirme, sıralama, çoklu seçim ve teklif gönderme senaryoları).
+
+Tüm testleri çalıştırmak için:
+```bash
+flutter test
+```
+
+---
+
+## Sürekli Entegrasyon (CI/CD - GitHub Actions)
+
+Projede `.github/workflows/flutter_ci.yml` üzerinden yapılandırılmış otomatik CI hattı bulunmaktadır:
+* `main` / `master` dalına yapılan Push ve Pull Request'lerde otomatik tetiklenir.
+* **Çift Katmanlı Caching:** Flutter SDK (`subosito/flutter-action`) ve Pub bağımlılıkları (`actions/cache`) önbelleğe alınarak hızlı derleme sağlanır.
+* **Otomatik Kontroller:** `flutter analyze --no-fatal-infos` ve `flutter test --reporter expanded` adımları otomatik icra edilir.
+
 ---
 
 ## Kurulum ve Çalıştırma
@@ -102,14 +131,19 @@ cd mobile_frontend
 flutter pub get
 ```
 
-### 3. Çevre Değişkenleri (.env)
+### 3. Testleri Çalıştırın
+```bash
+flutter test
+```
+
+### 4. Çevre Değişkenleri (.env)
 `mobile_frontend/` dizini altında bir `.env` dosyası oluşturun:
 ```env
 API_BASE_URL=http://10.0.2.2:8000   # Android Emülatör için
 # API_BASE_URL=http://localhost:8000 # iOS veya Web için
 ```
 
-### 4. Uygulamayı Başlatın
+### 5. Uygulamayı Başlatın
 ```bash
 flutter run
 ```
