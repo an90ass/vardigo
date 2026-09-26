@@ -95,3 +95,11 @@ enum AppIconEnum {
   const AppIconEnum(this.value);
   String get svgPath => 'assets/icons/$value.svg';
 }
+
+enum AppImageEnum {
+  vardigoLogo('logos/vardigo_login_logo');
+
+  final String value;
+  const AppImageEnum(this.value);
+  String get path => 'assets/$value.png';
+}

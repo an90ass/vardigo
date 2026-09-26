@@ -9,6 +9,8 @@ class CustomCardContainer extends StatelessWidget {
   final VoidCallback? onTap;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
+  final Color? color;
+  final Border? border;
 
   const CustomCardContainer({
     super.key,
@@ -17,12 +19,21 @@ class CustomCardContainer extends StatelessWidget {
     this.onTap,
     this.padding = const EdgeInsets.all(16.0),
     this.margin,
+    this.color,
+    this.border,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     const radius = BorderRadius.all(Radius.circular(AppDimensions.cardRadius));
+
+    final effectiveColor = color ??
+        (isSelected ? colorScheme.primaryContainer : colorScheme.surface);
+    final effectiveBorder = border ??
+        (isSelected
+            ? null
+            : Border.all(color: colorScheme.outline, width: 1.0));
 
     return Padding(
       padding: margin ?? EdgeInsets.zero,
@@ -31,13 +42,9 @@ class CustomCardContainer extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
-            color: isSelected
-                ? colorScheme.primaryContainer
-                : colorScheme.surface,         
+            color: effectiveColor,
             borderRadius: radius,
-            border: isSelected
-                ? null
-                : Border.all(color: colorScheme.outline, width: 1.0), 
+            border: effectiveBorder,
             boxShadow: isSelected
                 ? AppShadows.cardSelected
                 : AppShadows.cardNormal,

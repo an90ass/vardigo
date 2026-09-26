@@ -52,6 +52,22 @@ abstract final class AppDimensions {
   static const double iconTextGap = 4.0;
   static const double logoSize = 56.0;
 
+  // Login page
+  static const double loginLogoSize = 136.0;
+  static const double loginLogoRadius = 28.0;
+  static const double loginLogoPadding = 16.0;
+  static const double loginTitleFontSize = 26.0;
+  static const double loginTitleLetterSpacing = -0.5;
+  static const double loginTaglineFontSize = 14.0;
+  static const double loginTaglineLetterSpacing = 0.1;
+  static const double loginFooterLetterSpacing = 0.5;
+  static const double loginSubtitleFontSize = 14.0;
+  static const double loginCardBorderWidth = 1.5;
+  static const double loginIconShadowBlur = 8.0;
+  static const double loginIconShadowOffsetY = 3.0;
+  static const double loginLoadingIndicatorSize = 36.0;
+  static const double loginLoadingStrokeWidth = 3.0;
+
   static const double checkboxSize = 20.0;
   static const double checkboxRadius = 6.0;
   static const double checkboxIconSize = 12.0;

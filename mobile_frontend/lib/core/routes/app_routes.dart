@@ -21,7 +21,16 @@ abstract final class AppRoutes {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider<AuthBloc>(
-            create: (_) => getIt<AuthBloc>()..add(const CheckAuthStatus()),
+            create: (_) {
+              final bloc = getIt<AuthBloc>();
+              // Only check session on a fresh start (AuthInitial).
+              // After logout the state is already Unauthenticated — no need
+              // to re-run the check, which would cause a brief loading flash.
+              if (bloc.state is AuthInitial) {
+                bloc.add(const CheckAuthStatus());
+              }
+              return bloc;
+            },
             child: const LoginPage(),
           ),
         );
