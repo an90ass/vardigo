@@ -44,6 +44,14 @@ class FakeOfferRepository implements OfferRepository {
   }
 
   @override
+  Future<Either<Failure, OfferEntity>> getOfferDetail(String offerId) async {
+    if (shouldFail) {
+      return const Left(ServerFailure(message: 'İşlem başarısız oldu'));
+    }
+    return Right(sampleOffer);
+  }
+
+  @override
   Future<Either<Failure, OfferEntity>> acceptOffer(String offerId) async {
     if (shouldFail) {
       return const Left(ServerFailure(message: 'İşlem başarısız oldu'));

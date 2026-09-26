@@ -18,9 +18,11 @@ void main() {
       'status': 'pending',
       'expiresAt': '2026-08-16T23:59:59Z',
       'remain': '21 saat 32 dakika',
+      'city': 'İstanbul',
+      'note': 'Şube: Sinanpaşa Mah.',
     };
 
-    test('should deserialize OfferModel correctly from JSON', () {
+    test('should deserialize OfferModel correctly from JSON with metadata', () {
       final model = OfferModel.fromJson(offerJson);
 
       expect(model.id, 'off-1');
@@ -35,9 +37,11 @@ void main() {
       expect(model.status, OfferStatus.pending);
       expect(model.expiresAt, '2026-08-16T23:59:59Z');
       expect(model.remain, '21 saat 32 dakika');
+      expect(model.city, 'İstanbul');
+      expect(model.note, 'Şube: Sinanpaşa Mah.');
     });
 
-    test('should serialize OfferModel correctly to JSON', () {
+    test('should serialize OfferModel correctly to JSON with metadata', () {
       final model = OfferModel.fromJson(offerJson);
       final jsonMap = model.toJson();
 
@@ -45,6 +49,8 @@ void main() {
       expect(jsonMap['title'], 'Garson');
       expect(jsonMap['status'], 'pending');
       expect(jsonMap['remain'], '21 saat 32 dakika');
+      expect(jsonMap['city'], 'İstanbul');
+      expect(jsonMap['note'], 'Şube: Sinanpaşa Mah.');
     });
 
     test('should map OfferModel to OfferEntity properly', () {
@@ -54,6 +60,8 @@ void main() {
       expect(entity, isA<OfferEntity>());
       expect(entity.id, model.id);
       expect(entity.title, model.title);
+      expect(entity.city, 'İstanbul');
+      expect(entity.note, 'Şube: Sinanpaşa Mah.');
       expect(entity.isPending, isTrue);
       expect(entity.isAccepted, isFalse);
       expect(entity.isRejected, isFalse);
@@ -72,6 +80,8 @@ void main() {
         when: '16 Ağu',
         status: OfferStatus.pending,
         expiresAt: '2026-08-16',
+        city: 'İstanbul',
+        note: 'Şube: Kadıköy',
       );
 
       const entity2 = OfferEntity(
@@ -86,6 +96,8 @@ void main() {
         when: '16 Ağu',
         status: OfferStatus.pending,
         expiresAt: '2026-08-16',
+        city: 'İstanbul',
+        note: 'Şube: Kadıköy',
       );
 
       expect(entity1, equals(entity2));
