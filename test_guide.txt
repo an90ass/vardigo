@@ -27,8 +27,15 @@ A) BACKEND SERVİSİNİ BAŞLATMA:
 B) MOBİL UYGULAMAYI BAŞLATMA:
      cd mobile_frontend
      flutter pub get
-     flutter run -d chrome --dart-define=REFERENCE_FRAME=true
-     (Not: Web, iOS simülatör veya Android emülatörde sorunsuz çalışır)
+
+     Seçenek 1 (Referans Telefon Çerçevesi ile - Web veya Emülatör):
+       # Web / Chrome üzerinde:
+       flutter run -d chrome --dart-define=REFERENCE_FRAME=true
+       # Emülatör üzerinde çerçeve ile:
+       flutter run --dart-define=REFERENCE_FRAME=true
+
+     Seçenek 2 (Android Emülatör / iOS Simülatör - Native Tam Ekran):
+       flutter run
 
 ------------------------------------------------------------
 2. MİNİMUM TEST SENARYOSU (RESMİ DOĞRULAMA AKIŞI)

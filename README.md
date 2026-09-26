@@ -57,13 +57,17 @@ cd mobile_frontend
 flutter pub get
 ```
 
-#### 1. Referans Telefon Çerçevesi ile Çalıştırma (Önerilen — Web / Chrome):
-Figma referans tasarımındaki iPhone 390×844 boyutlarını, siyah çerçeveyi, Dynamic Island'ı ve 9:41 durum çubuğunu birebir deneyimlemek için:
+#### 1. Referans Telefon Çerçevesi ile Çalıştırma (Web / Chrome veya Emülatör):
+Figma referans tasarımındaki iPhone 390×844 boyutlarını, siyah çerçeveyi, Dynamic Island'ı ve 9:41 durum çubuğunu simüle etmek için:
 ```bash
+# Web / Chrome üzerinde:
 flutter run -d chrome --dart-define=REFERENCE_FRAME=true
+
+# Emülatör veya cihaz üzerinde çerçeve ile:
+flutter run --dart-define=REFERENCE_FRAME=true
 ```
 
-#### 2. Standart Native Mobil Olarak Çalıştırma (Android Emülatör / iOS Simülatör):
+#### 2. Standart Native Tam Ekran Olarak Çalıştırma (Android Emülatör / iOS Simülatör):
 ```bash
 flutter run
 ```
@@ -96,24 +100,37 @@ flutter run
 
 ## 3. Proje Mimarisi ve Monorepo Yapısı
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a8ae1051-4ae6-4007-a514-d27016ec41ed" alt="VardiGO Sistem ve Katman Mimarisi" width="650" />
+</p>
+
 ```text
 vardigo/
-├── mobile_frontend/                # Flutter Mobil Uygulaması
-│   ├── assets/                     # SVG İkonlar, Logolar ve Görseller
+├── mobile_frontend/                # Flutter Mobil Uygulaması (Feature-Based Clean Architecture)
+│   ├── assets/                     # SVG İkonlar, Şirket Logoları ve Aday Avatarları
 │   ├── lib/
 │   │   ├── core/                   # Ortak Tasarım Token'ları, Ağ, Tema, Depolama
-│   │   │   ├── constants/          # AppDimensions, AppStrings, RouteNames
-│   │   │   ├── di/                 # GetIt Bağımlılık Enjeksiyonu
+│   │   │   ├── constants/          # AppDimensions, AppStrings, RouteNames, ApiEndpoints
+│   │   │   ├── di/                 # GetIt Bağımlılık Enjeksiyonu (Service Locator)
 │   │   │   ├── enums/              # AppIconEnum, UserRole, OfferStatus
-│   │   │   ├── network/            # DioClient (3x Retry, Token Interceptor)
+│   │   │   ├── network/            # DioClient (3x Retry, Token Interceptor, ApiUrl)
 │   │   │   ├── routes/             # AppRoutes & Sayfa Yönlendirme
-│   │   │   ├── storage/            # FlutterSecureStorage Oturum Kalıcılığı
+│   │   │   ├── storage/            # FlutterSecureStorage Oturum ve Token Kalıcılığı
 │   │   │   ├── theme/              # Urbanist Tipografi, Figma Renk Paleti, Gölgeler
 │   │   │   └── widgets/            # PhoneFrame (iPhone 390×844), Custom Controls
-│   │   └── features/               # Feature-Based Clean Architecture Modülleri
-│   │       ├── auth/               # Giriş & Rol Yönetimi (Data, Domain, Presentation)
+│   │   └── features/               # Feature-Based Modüler Katmanlar (Clean Architecture)
+│   │       ├── auth/               # Kimlik Doğrulama ve Rol Yönetimi
+│   │       │   ├── data/           # [DATA] Auth DataSource, Login Models & Repositories
+│   │       │   ├── domain/         # [DOMAIN] User Entity & Login UseCase
+│   │       │   └── presentation/   # [PRESENTATION] AuthBloc, LoginPage & Widgets
 │   │       ├── candidates/         # Sayfa 1: Eşleşen Personeller (İşveren Görünümü)
+│   │       │   ├── data/           # [DATA] Candidate DataSource, DTOs & Repository Impl
+│   │       │   ├── domain/         # [DOMAIN] Candidate Entity & GetCandidatesUseCase
+│   │       │   └── presentation/   # [PRESENTATION] CandidateBloc, CandidateViews & CandidateCard
 │   │       └── offers/             # Sayfa 2: Görüşme Talepleri (İş Arayan Görünümü)
+│   │           ├── data/           # [DATA] Offer DataSource, DTOs & Repository Impl
+│   │           ├── domain/         # [DOMAIN] Offer Entity, Accept/Reject/Detail UseCases
+│   │           └── presentation/   # [PRESENTATION] OfferBloc, OfferViews & OfferCard
 │   └── test/                       # 36/36 Unit & BLoC Test Paketi
 │
 ├── backend/                        # FastAPI REST Servisi (MVC Mimarisi)
@@ -121,11 +138,11 @@ vardigo/
 │   │   ├── config/                 # Veritabanı ve Ortam Ayarları (SQLite / PostgreSQL)
 │   │   ├── data/                   # Sabit Seed Verileri (Candidates & Offers JSON)
 │   │   ├── dependencies/           # Rol Yetkilendirme & Servis Enjeksiyonları
-│   │   ├── models/                 # [MODEL] SQLAlchemy ORM Varlıkları
-│   │   ├── repositories/           # [REPOSITORY] Veritabanı Erişim Katmanı
+│   │   ├── models/                 # [MODEL] SQLAlchemy ORM Varlıkları (User, Candidate, Offer)
+│   │   ├── repositories/           # [REPOSITORY] Base & Entity CRUD Sorgu Katmanları
 │   │   ├── routes/                 # [CONTROLLER] Auth, Candidates, Offers Router'ları
 │   │   ├── schemas/                # [DTO] Pydantic v2 Tip Güvenli Veri Şemaları
-│   │   ├── services/               # [İŞ MANTIĞI] Eşleştirme Motoru & Durum Yönetimi
+│   │   ├── services/               # [İŞ MANTIĞI] Eşleştirme Motoru, Teklif & Seed Servisleri
 │   │   └── main.py                 # FastAPI Uygulama Girişi & CORS Yapılandırması
 │   ├── Dockerfile                  # Backend Konteyner İmaj Yapılandırması
 │   └── requirements.txt            # Python Bağımlılıkları
