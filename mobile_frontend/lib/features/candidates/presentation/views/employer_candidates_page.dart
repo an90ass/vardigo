@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/storage/token_storage.dart';
 import '../../../../core/theme/theme_context_ext.dart';
@@ -102,7 +103,7 @@ class EmployerCandidatesPage extends StatelessWidget {
   void _onHelpPressed(BuildContext context) {
     _showSnackbar(
       context: context,
-      message: 'Yardım merkezi yakında aktif olacaktır.',
+      message: AppStrings.helpCenterNotice,
       backgroundColor: context.colorScheme.onSurface,
     );
   }
@@ -188,7 +189,7 @@ class EmployerCandidatesPage extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.errorSpacingVertical),
             Text(
-              state.errorMessage ?? 'Adaylar yüklenirken bir hata oluştu.',
+              state.errorMessage ?? AppStrings.candidatesLoadError,
               textAlign: TextAlign.center,
               style: textTheme.titleMedium,
             ),
@@ -204,7 +205,7 @@ class EmployerCandidatesPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.controlRadius),
                 ),
               ),
-              child: const Text('Tekrar Dene'),
+              child: const Text(AppStrings.retry),
             ),
           ],
         ),
@@ -215,7 +216,7 @@ class EmployerCandidatesPage extends StatelessWidget {
   Widget _buildEmptyView(BuildContext context) {
     return Center(
       child: Text(
-        'Uygun aday bulunamadı.',
+        AppStrings.noCandidatesFound,
         style: context.textTheme.titleMedium?.copyWith(
           color: context.customColors.slate500,
         ),

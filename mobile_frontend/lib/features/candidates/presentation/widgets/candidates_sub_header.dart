@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 
@@ -19,11 +20,11 @@ class CandidatesSubHeader extends StatelessWidget {
   String get _sortLabel {
     switch (activeSort) {
       case CandidateSort.near:
-        return 'Sırala: En Yakın';
+        return AppStrings.sortNear;
       case CandidateSort.rating:
-        return 'Sırala: Puan';
+        return AppStrings.sortRating;
       case CandidateSort.recommended:
-        return 'Sırala: Önerilen';
+        return AppStrings.sortRecommended;
     }
   }
 
@@ -62,16 +63,16 @@ class CandidatesSubHeader extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Adayları Sırala',
+                  AppStrings.sortBottomSheetTitle,
                   style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.cardPhotoTextGap),
-                _buildSortOption(ctx, 'Önerilen', CandidateSort.recommended),
-                _buildSortOption(ctx, 'En Yakın', CandidateSort.near),
-                _buildSortOption(ctx, 'Puana Göre', CandidateSort.rating),
+                _buildSortOption(ctx, AppStrings.sortOptionRecommended, CandidateSort.recommended),
+                _buildSortOption(ctx, AppStrings.sortOptionNear, CandidateSort.near),
+                _buildSortOption(ctx, AppStrings.sortOptionRating, CandidateSort.rating),
               ],
             ),
           ),
@@ -125,7 +126,7 @@ class CandidatesSubHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '$selectedCount kişi seçildi',
+            AppStrings.personSelected(selectedCount),
             style: textTheme.titleSmall,
           ),
           GestureDetector(

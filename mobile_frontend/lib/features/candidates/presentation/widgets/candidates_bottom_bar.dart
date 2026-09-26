@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 
@@ -90,7 +91,7 @@ class CandidatesBottomBar extends StatelessWidget {
         ),
         const SizedBox(width: AppDimensions.ctaGap),
         Text(
-          'Görüşme Talebi Gönder ($selectedCount)',
+          AppStrings.sendOfferButton(selectedCount),
           style: textTheme.labelLarge?.copyWith(
             color: colorScheme.onPrimary,
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/custom_controls.dart';
@@ -48,13 +49,13 @@ class CandidatesAppBar extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '$totalCount personel bulundu',
+                    AppStrings.personnelFound(totalCount),
                     style: textTheme.bodyMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    'Eşleşen Personeller',
+                    AppStrings.matchingCandidatesTitle,
                     style: textTheme.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

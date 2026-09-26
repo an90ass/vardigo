@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/theme/app_shadows.dart';
 import '../../../../core/theme/theme_context_ext.dart';
@@ -31,7 +32,7 @@ class CandidatesTabBar extends StatelessWidget {
           Expanded(
             child: _buildTab(
               context: context,
-              title: '%100 Eşleşme ($totalPerfect)',
+              title: AppStrings.perfectMatchTab(totalPerfect),
               isActive: activeTab == CandidateTab.perfect,
               onTap: () => onTabChanged(CandidateTab.perfect),
             ),
@@ -39,7 +40,7 @@ class CandidatesTabBar extends StatelessWidget {
           Expanded(
             child: _buildTab(
               context: context,
-              title: 'Benzer Personeller ($totalSimilar)',
+              title: AppStrings.similarMatchTab(totalSimilar),
               isActive: activeTab == CandidateTab.similar,
               onTap: () => onTabChanged(CandidateTab.similar),
             ),

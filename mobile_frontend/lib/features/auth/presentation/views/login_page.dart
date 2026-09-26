@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/theme/theme_context_ext.dart';
@@ -75,7 +76,7 @@ class _LoginHeader extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Vardigo',
+          AppStrings.loginTitle,
           style: textTheme.headlineMedium?.copyWith(
             color: colorScheme.primary,
             fontWeight: FontWeight.w700,
@@ -84,7 +85,7 @@ class _LoginHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppDimensions.iconTextGap * 2),
         Text(
-          'Devam etmek için profilinizi seçin',
+          AppStrings.loginSubtitle,
           style: textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),
@@ -123,8 +124,8 @@ class _LoadingView extends StatelessWidget {
             const SizedBox(height: AppDimensions.cardPhotoTextGap),
             Text(
               isCheckingSession
-                  ? 'Oturum kontrol ediliyor...'
-                  : 'Giriş yapılıyor, lütfen bekleyin...',
+                  ? AppStrings.checkingSession
+                  : AppStrings.loggingIn,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -134,8 +135,8 @@ class _LoadingView extends StatelessWidget {
             const SizedBox(height: AppDimensions.iconTextGap),
             Text(
               isCheckingSession
-                  ? 'Kayıtlı oturumunuz doğrulanıyor '
-                  : 'Profiliniz ve oturumunuz hazırlanıyor',
+                  ? AppStrings.sessionVerifying
+                  : AppStrings.profilePreparing,
               style: textTheme.bodySmall?.copyWith(
                 color: customColors.slate500,
               ),
@@ -156,8 +157,8 @@ class _RoleSelectionSection extends StatelessWidget {
     return Column(
       children: [
         _RoleCard(
-          title: 'İşveren Girişi',
-          subtitle: 'Zarif Cheff Restoran',
+          title: AppStrings.employerLoginTitle,
+          subtitle: AppStrings.employerLoginSubtitle,
           icon: Icons.storefront_outlined,
           onTap: () {
             context.read<AuthBloc>().add(
@@ -167,8 +168,8 @@ class _RoleSelectionSection extends StatelessWidget {
         ),
         const SizedBox(height: AppDimensions.cardPhotoTextGap),
         _RoleCard(
-          title: 'İş Arayan Girişi',
-          subtitle: 'Merve Y. (Garson)',
+          title: AppStrings.workerLoginTitle,
+          subtitle: AppStrings.workerLoginSubtitle,
           icon: Icons.person_outline,
           onTap: () {
             context.read<AuthBloc>().add(

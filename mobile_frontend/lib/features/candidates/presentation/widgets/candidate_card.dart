@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/theme/app_shadows.dart';
 import '../../../../core/theme/theme_context_ext.dart';
@@ -248,7 +249,7 @@ class CandidateCard extends StatelessWidget {
     final bool salaryMatches = _salaryMatches;
     final Color salaryColor = salaryMatches ? customColors.green : customColors.warning;
     final Color salaryBg = isSelected ? colorScheme.surface : customColors.salaryBarBg;
-    final String salaryText = salaryMatches ? 'Ücret beklentisi uyuşuyor' : 'Ücret beklentisi uyuşmuyor';
+    final String salaryText = salaryMatches ? AppStrings.salaryMatches : AppStrings.salaryNoMatch;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -282,7 +283,7 @@ class CandidateCard extends StatelessWidget {
             ),
           ),
           Text(
-            '₺25.000 / ay',
+            AppStrings.defaultSalary,
             style: textTheme.bodySmall?.copyWith(
               color: salaryColor,
               fontWeight: FontWeight.w700,
