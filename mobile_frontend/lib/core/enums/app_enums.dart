@@ -67,6 +67,15 @@ enum OfferStatusFilter {
   const OfferStatusFilter(this.value);
 }
 
+enum OfferSortOption {
+  recommended('recommended'),
+  pay('pay'),
+  urgent('urgent');
+
+  final String value;
+  const OfferSortOption(this.value);
+}
+
 enum AppIconEnum {
   alarm('alarm'),
   back('back'),
