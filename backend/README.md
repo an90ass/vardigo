@@ -25,7 +25,6 @@ backend/
 │   │   └── seed_service.py
 │   └── main.py             # FastAPI uygulama başlangıcı ve CORS yapılandırması
 │
-├── tests/                  # Pytest birim ve entegrasyon testleri
 ├── run.py                  # Kolay başlatıcı script (Entrypoint)
 ├── Dockerfile              # Docker konteyner yapılandırması
 ├── .dockerignore           # Konteyner harici bırakılan dosyalar
@@ -193,16 +192,6 @@ curl -X POST http://localhost:8000/api/offers/off-1/accept -H "Authorization: Be
 
 # Ret:
 curl -X POST http://localhost:8000/api/offers/off-1/reject -H "Authorization: Bearer <TOKEN>"
-```
-
----
-
-## Testleri Koşturma
-
-Backend birim ve entegrasyon testlerini koşturmak için:
-```bash
-cd backend
-pytest
 ```
 
 ---

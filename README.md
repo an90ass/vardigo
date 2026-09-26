@@ -21,8 +21,7 @@ vardigo/
     ├── app/
     │   ├── routes/           # Auth, Candidates, Offers endpoint'leri
     │   ├── services/         # Eşleştirme skoru & filtreleme iş mantığı
-    │   └── data/             # Seed verisi ve kalıcı durum yönetimi
-    └── tests/                # Pytest test paketi
+    └── data/             # Seed verisi ve kalıcı durum yönetimi
 ```
 
 ---
@@ -143,21 +142,14 @@ curl -X POST "http://localhost:8000/api/offers/off-1/accept" \
 
 ---
 
-## Testleri Çalıştırma
+## Testleri Çalıştırma (Mobil Otomatik Testler)
 
-### Mobil Testleri (Flutter)
 ```bash
 cd mobile_frontend
 flutter test
 ```
 * **Sonuç:** `36/36 tests passed` (ApiResponseParser, AuthBloc, CandidateBloc, CandidateEntity, OfferBloc, OfferEntity).
 * **Statik Kod Analizi:** `flutter analyze` (0 issue).
-
-### Backend Testleri (Pytest)
-```bash
-cd backend
-pytest
-```
 
 ---
 

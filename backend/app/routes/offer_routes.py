@@ -19,9 +19,8 @@ def get_offers(
     current_user: UserORM = Depends(require_worker),
     offer_service: OfferService = Depends(get_offer_service)
 ):
-
     status_val = status_filter.value if status_filter else "pending"
-    data = offer_service.get_offers_list(status=status_val, worker_id=current_user.id)
+    data = offer_service.get_offers_list(status=status_val)
     return ApiResponse(data=data)
 
 
@@ -35,12 +34,23 @@ def create_offers(
     try:
         created = offer_service.create_offers(request.workerIds)
         return ApiResponse(data={"created": [c.model_dump() for c in created]})
-    except ValueError as ve:
+    except KeyError as ke:
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_404_NOT_FOUND,
             content=ApiResponse(
                 ok=False,
-                error=ErrorDetail(code="EMPTY_SELECTION", message=str(ve))
+                error=ErrorDetail(code="CANDIDATE_NOT_FOUND", message=str(ke))
+            ).model_dump()
+        )
+    except ValueError as ve:
+        is_conflict = "zaten açık bir görüşme talebi" in str(ve)
+        status_code = status.HTTP_409_CONFLICT if is_conflict else status.HTTP_400_BAD_REQUEST
+        error_code = "OFFER_CONFLICT" if is_conflict else "EMPTY_SELECTION"
+        return JSONResponse(
+            status_code=status_code,
+            content=ApiResponse(
+                ok=False,
+                error=ErrorDetail(code=error_code, message=str(ve))
             ).model_dump()
         )
 

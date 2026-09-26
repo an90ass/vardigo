@@ -21,7 +21,7 @@ abstract final class AppStrings {
   static const String employerLoginTitle = 'İşveren Girişi';
   static const String employerLoginSubtitle = 'Zarif Cheff Restoran';
   static const String workerLoginTitle = 'İş Arayan Girişi';
-  static const String workerLoginSubtitle = 'Merve Y. (Garson)';
+  static const String workerLoginSubtitle = 'Aday Demo Profili';
   static const String checkingSession = 'Oturum kontrol ediliyor...';
   static const String loggingIn = 'Giriş yapılıyor, lütfen bekleyin...';
   static const String sessionVerifying = 'Kayıtlı oturumunuz doğrulanıyor';

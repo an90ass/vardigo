@@ -79,16 +79,16 @@ class OfferService:
             remain=remain
         )
 
-    def get_offers_list(self, status: Optional[str] = None, worker_id: Optional[str] = None) -> OfferListResponse:
+    def get_offers_list(self, status: Optional[str] = None) -> OfferListResponse:
         #  Update any expired pending offers first
         self._update_expired_offers()
 
-        #  Query matching status scoped to worker_id
-        offer_orms = self.repo.get_offers_by_status(status=status, worker_id=worker_id)
+        #  Query matching status
+        offer_orms = self.repo.get_offers_by_status(status=status)
         offers = [self._to_schema(o) for o in offer_orms]
 
-        #  Calculate pending count for this worker
-        all_pending = self.repo.get_offers_by_status(status="pending", worker_id=worker_id)
+        #  Calculate pending count
+        all_pending = self.repo.get_offers_by_status(status="pending")
         pending_count = len(all_pending)
 
         return OfferListResponse(pendingCount=pending_count, offers=offers)
@@ -102,6 +102,11 @@ class OfferService:
         exp_dt = now + timedelta(hours=21, minutes=32)
 
         for w_id in worker_ids:
+            # Check 404 rule: candidate must exist
+            cand = self.repo.db.query(CandidateORM).filter(CandidateORM.id == w_id).first()
+            if not cand and w_id != "u_worker":
+                raise KeyError(f"'{w_id}' id'li aday bulunamadı.")
+
             # Check 409 rule: conflict if candidate already has an active pending offer
             existing_pending = self.repo.find_pending_offer_by_worker(w_id)
             if existing_pending:
@@ -117,17 +122,10 @@ class OfferService:
                         existing_pending = None
                 except Exception:
                     pass
-
+         
             if existing_pending:
-                cand_name = None
-                if existing_pending.candidate:
-                    cand_name = existing_pending.candidate.name
-                if not cand_name:
-                    cand = self.repo.db.query(CandidateORM).filter(CandidateORM.id == w_id).first()
-                    if cand:
-                        cand_name = cand.name
-                display_name = cand_name if cand_name else f"'{w_id}'"
-                raise ValueError(f"{display_name} adlı adaya zaten açık bir görüşme talebi bulunmaktadır.")
+                cand_name = cand.name if cand else (existing_pending.candidate.name if existing_pending.candidate else f"'{w_id}'")
+                raise ValueError(f"{cand_name} adlı adaya zaten açık bir görüşme talebi bulunmaktadır.")
 
             new_id = f"o_{str(uuid.uuid4())[:8]}"
             offer_orm = OfferORM(

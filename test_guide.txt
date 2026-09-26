@@ -1,57 +1,112 @@
 ============================================================
-VARDIGO CASE STUDY — TEST VE KULLANIM SENARYOLARI KILAVUZU
+VARDIGO CASE STUDY — DETAYLI TEST VE DOĞRULAMA KILAVUZU
 ============================================================
 
-Bu kılavuz, VardiGO mobil uygulamasının ve backend servisinin 
-iş kurallarını ve uçtan uca senaryolarını test etmek için hazırlanmıştır.
+Bu kılavuz, VardiGO değerlendirme ekibi için mobil uygulama ve 
+backend servisinin tüm sözleşme uç noktalarını (endpoints), 
+minimum test adımlarını ve uçtan uca senaryolarını test etmek amacıyla hazırlanmıştır.
 
 ------------------------------------------------------------
-SENARYO 1: İŞVEREN AKIŞI (Aday Listeleme & Teklif Gönderme)
+1. HIZLI BAŞLANGIÇ (KURULUM VE ÇALIŞTIRMA)
 ------------------------------------------------------------
-1. Uygulamayı başlatın (Standart veya 'REFERENCE_FRAME=true' ile).
-2. Giriş ekranında "İşveren Girişi (Zarif Cheff Restoran)" butonuna dokunun.
-3. Sayfa 1 (Eşleşen Personeller) açılacaktır:
-   - "Tam Eşleşen" ve "Benzer Personeller" sekmeleri arasında geçiş yapın.
-   - "Sırala: Önerilen", "En Yakın" veya "Puan" filtrelerini deneyin.
-   - Listeden "Merve Y." adayının checkbox'ını seçin (veya birden fazla aday seçin).
-   - Ekranın altındaki "Görüşme Talebi Gönder (1)" butonuna dokunun.
-4. Başarılı bildirim SnackBar mesajı görüntülenecektir:
-   "1 adaya görüşme talebi başarıyla gönderildi"
+
+A) BACKEND SERVİSİNİ BAŞLATMA:
+   Yöntem 1 (Docker Compose - Önerilen):
+     docker-compose up -d --build
+     API: http://localhost:8000
+     Docs: http://localhost:8000/docs
+
+   Yöntem 2 (Yerel Python Ortamı):
+     cd backend
+     python -m venv .venv
+     .venv\Scripts\activate  (veya source .venv/bin/activate)
+     pip install -r requirements.txt
+     uvicorn app.main:app --reload --port 8000
+
+B) MOBİL UYGULAMAYI BAŞLATMA:
+     cd mobile_frontend
+     flutter pub get
+     flutter run -d chrome --dart-define=REFERENCE_FRAME=true
+     (Not: Web, iOS simülatör veya Android emülatörde sorunsuz çalışır)
 
 ------------------------------------------------------------
-SENARYO 2: İŞ ARAYAN AKIŞI (Kişiselleştirilmiş Teklifler & Yanıtlama)
+2. MİNİMUM TEST SENARYOSU (RESMİ DOĞRULAMA AKIŞI)
 ------------------------------------------------------------
-1. Sağ üstteki çıkış butonuna dokunarak giriş ekranına dönün.
-2. "İş Arayan Girişi (Merve Y.)" seçeneğine dokunun.
-3. Sayfa 2 (Görüşme Talepleri) açılacaktır:
-   - Sadece Merve Y.'ye gönderilen özel görüşme talepleri listelenir.
-   - Karta dokunarak 'AnimatedCrossFade' ile detay alanını açın (şube, saat, notlar).
-   - "Sırala" butonuna basarak "Ücret (En Yüksek)" veya "Kalan Süre" sıralamasını test edin.
-   - Acil olan tekliflerde 24 saat altı geri sayım sayacını inceleyin.
-   - "İlgileniyorum" (Kabul) veya "İlgilenmiyorum" (Ret) butonuna dokunun.
-4. İşlem sonrası teklif "Cevaplanan" sekmesine taşınır ve yeşil/kırmızı durum rozeti alır.
+
+ADIM 1: İşveren Girişi ve Aday Listesi (GET /api/candidates)
+  1. Giriş ekranında "İşveren Girişi (Zarif Cheff Restoran)" butonuna dokunun.
+  2. Sayfa 1 (Eşleşen Personeller) açılır.
+  3. GET /api/candidates çağrılır ve 4 aday başarıyla listelenir.
+  4. "%100 Eşleşme" ve "Benzer Personeller" sekmeleri, sıralama filtreleri incelenebilir.
+
+ADIM 2: Çoklu Aday Seçimi ve Teklif Gönderme (POST /api/offers)
+  1. Listeden 2 adayı (Örn: "Merve Aydın" ve "Derya Şen") checkbox'larına dokunarak seçin.
+  2. Alt bardaki "Görüşme Talebi Gönder (2)" butonuna dokunun.
+  3. POST /api/offers çağrılır (`{"workerIds": ["w_merve", "w_derya"]}`).
+  4. 2 adaya başarıyla teklif oluşturulduğuna dair yeşil SnackBar bildirimi görünür.
+
+ADIM 3: İş Arayan Girişi ve Bekleyen Teklifler (GET /api/offers?status=pending)
+  1. Sağ üst köşedeki çıkış (Logout) ikonuna dokunarak giriş ekranına dönün.
+  2. "İş Arayan Girişi (Aday Demo Profili)" seçeneğine dokunun.
+  3. Sayfa 2 (Görüşme Talepleri) "Bekleyen" sekmesinde açılır.
+  4. GET /api/offers?status=pending çağrılır; işverenin az önce gönderdiği 
+     yeni teklifler + seed teklifleri eksiksiz olarak listelenir.
+
+ADIM 4: Teklif Detayını İnceleme (GET /api/offers/{id})
+  1. Gelen teklif kartlarındaki "Detayları Gör" butonuna dokunun.
+  2. GET /api/offers/{id} çağrılır ve ek bilgiler (şehir: İstanbul, şube: Sinanpaşa Mah.) 
+     kartın içine dinamik ve animasyonlu (AnimatedCrossFade) olarak yüklenir.
+  3. "Detayları Gizle" butonuna basılarak alan tekrar daraltılabilir.
+
+ADIM 5: Teklifleri Yanıtlama (POST /api/offers/{id}/accept & reject)
+  1. Bekleyen tekliflerden birinde "İlgileniyorum" (Kabul - Yeşil) butonuna dokunun.
+     -> POST /api/offers/{id}/accept çağrılır.
+  2. İkinci teklifte "İlgilenmiyorum" (Ret - Kırmızı) butonuna dokunun.
+     -> POST /api/offers/{id}/reject çağrılır.
+  3. Her iki teklif de işlem sırasında devre dışı kalır (Opacity 0.5) ve listeden kaldırılır.
+
+ADIM 6: Cevaplanan Teklifleri Doğrulama (GET /api/offers?status=answered)
+  1. Üstteki "Cevaplanan" sekmesine dokunun.
+  2. GET /api/offers?status=answered çağrılır.
+  3. Az önce kabul edilen teklif yeşil "Kabul Edildi" rozetiyle, reddedilen teklif 
+     kırmızı "Reddedildi" rozetiyle listelenir (Toplam 2 yeni kayıt).
+
+ADIM 7: Sayfa Yenileme ve Durum Kalıcılığı (Persistence)
+  1. Ekranı aşağı kaydırarak sayfayı yenileyin (Pull-to-Refresh) veya uygulamayı yeniden açın.
+  2. Durumların veritabanında korunduğu ve hiçbir verinin kaybolmadığı doğrulanır.
 
 ------------------------------------------------------------
-SENARYO 3: İŞ KURALI TESTİ (Açık Teklif Çakışması / 409 Conflict)
+3. İŞ KURALLARI VE HATA YÖNETİMİ TESTLERİ (EDGE CASES)
 ------------------------------------------------------------
-1. Merve Y.'nin bekleyen açık bir teklifi varken tekrar İşveren olarak giriş yapın.
-2. "Merve Y." adayını seçip tekrar "Görüşme Talebi Gönder" butonuna dokunun.
-3. Sistem mükerrer teklifi engeller ve kullanıcı dostu şu uyarıyı gösterir:
-   "Merve Y. adlı adaya zaten açık bir görüşme talebi bulunmaktadır."
-4. Merve Y. teklifi kabul veya ret ettikten sonra işveren tekrar yeni bir teklif gönderebilir.
+
+A) 409 CONFLICT (Açık Teklif Varken Tekrar Teklif Gönderme):
+   1. Tekrar İşveren olarak giriş yapın.
+   2. Az önce teklif gönderilen ve henüz bekleyen bir adayı seçip tekrar teklif gönderin.
+   3. Backend 409 döner ve mobil kullanıcı dostu şu mesajı gösterir:
+      "[Aday Adı] adlı adaya zaten açık bir görüşme talebi bulunmaktadır."
+
+B) 400 BAD REQUEST (Aday Seçilmeden Gönderme):
+   1. İşveren ekranında hiçbir aday seçilmediğinde buton pasiftir (0 aday).
+   2. API'ye doğrudan boş workerIds listesi gönderildiğinde 400 EMPTY_SELECTION döner.
+
+C) 404 NOT FOUND (Bilinmeyen Aday / Teklif):
+   1. Sistemde olmayan bir worker_id veya offer_id ile istek atıldığında 
+      404 CANDIDATE_NOT_FOUND veya OFFER_NOT_FOUND hatası döner.
+
+D) SÜRESİ DOLAN TEKLİFLER VE GERİ SAYIM:
+   1. Kalan süresi 24 saatin altında olan tekliflerde kırmızı geri sayım sayacı çalışır.
+   2. Süresi dolan teklifler otomatik olarak "Süresi Dolan" sekmesine taşınır.
 
 ------------------------------------------------------------
-SENARYO 4: OTOMATİK BİRİM VE BLOC TESTLERİ
+4. OTOMATİK TESTLER VE KOD KALİTESİ
 ------------------------------------------------------------
-Mobil Birim ve Durum Yönetimi Testleri (36/36 Passed):
+
+Mobil Birim ve BLoC Testleri (36/36 Başarılı):
   cd mobile_frontend
   flutter test
 
-Mobil Statik Kod Analizi (0 Issue):
+Mobil Statik Kod Analizi (0 Hata / Clean Architecture):
   cd mobile_frontend
   flutter analyze
 
-Backend Servis ve Eşleştirme Motoru Testleri:
-  cd backend
-  pytest
 ============================================================

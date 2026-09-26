@@ -5,7 +5,7 @@ VARDIGO CASE STUDY — SUREC NOTU
 1. KULLANILAN ARACLAR VE TEKNOLOJILER
 ------------------------------------------------------------
 - Mobil: Flutter 3.44.4 (Dart 3.12.2), flutter_bloc (State Management), dartz (Functional Error Handling), get_it (DI), dio (Ağ katmanı), flutter_screenutil (390×844 Figma Responsive).
-- Backend: Python 3.11 (FastAPI, MVC Mimarisi, SQLite + SQLAlchemy ORM, Docker & Compose), Pydantic v2, Uvicorn, Pytest.
+- Backend: Python 3.11 (FastAPI, MVC Mimarisi, SQLite + SQLAlchemy ORM, Docker & Compose), Pydantic v2, Uvicorn.
 - Yapay Zeka & Asistan: Google Antigravity (Gemini 2.5 Pro) pair-programming asistanı olarak mimari planlama, token analizi ve test senaryolarının inşasında kullanıldı.
 - Tasarım Araçları: Canva (Adaptive icon ve Splash safe-zone boyutlandırma).
 
