@@ -1,5 +1,6 @@
 import '../../../../core/constants/api_endpoints.dart';
 import '../../../../core/enums/app_enums.dart';
+import '../../../../core/network/api_response_parser.dart';
 import '../../../../core/network/dio_client.dart';
 import '../models/candidate_list_model.dart';
 
@@ -34,12 +35,11 @@ class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
       queryParameters: queryParams.isNotEmpty ? queryParams : null,
     );
 
-    final rawData = response.data;
-    if (rawData is Map<String, dynamic>) {
-      final innerData = rawData['data'] as Map<String, dynamic>? ?? rawData;
-      return CandidateListModel.fromJson(innerData);
+    final data = ApiResponseParser.parseData(response.data);
+    if (data is Map<String, dynamic>) {
+      return CandidateListModel.fromJson(data);
     }
 
-    throw const FormatException('Beklenmeyen sunucu yanıt biçimi');
+    throw const FormatException('Geçersiz aday listesi verisi');
   }
 }
