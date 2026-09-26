@@ -99,6 +99,7 @@ feature_name/
 * **AppStrings:** Tüm UI metinlerinin tek bir kaynakta toplandığı ve gelecekte `flutter_localizations` (`.arb`) altyapısına kolayca taşınabilecek mimari yapı.
 * **AppTheme & CustomColors:** `GoogleFonts.urbanist` tipografisi ve Figma renk paletini (`salaryBarBg`, `badgeGreen`, vb.) yöneten ThemeExtension altyapısı.
 
+
 ---
 
 ## Test ve Kalite Güvencesi (Testing & QA)

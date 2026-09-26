@@ -24,12 +24,11 @@ class VardigoApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'Vardigo',
+          title: 'VardiGO',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           initialRoute: AppRoutes.initial,
           onGenerateRoute: AppRoutes.onGenerateRoute,
-         
         );
       },
     );
