@@ -15,9 +15,15 @@ class OfferRepository(BaseRepository[OfferORM]):
     def get_all(self) -> List[OfferORM]:
         return self.db.query(OfferORM).all()
 
-    def get_offers_by_status(self, status: Optional[str] = None) -> List[OfferORM]:
+    def get_offers_by_status(self, status: Optional[str] = None, worker_id: Optional[str] = None) -> List[OfferORM]:
 
         query = self.db.query(OfferORM)
+
+        if worker_id:
+            valid_ids = {worker_id}
+            if worker_id in ("w_merve", "u_worker"):
+                valid_ids.update(["w_merve", "u_worker"])
+            query = query.filter(OfferORM.worker_id.in_(valid_ids))
 
         if status == "pending":
             query = query.filter(OfferORM.status == OfferStatus.PENDING)

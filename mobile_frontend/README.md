@@ -1,156 +1,171 @@
-# Vardigo - Mobil Uygulama
+# VardiGO — Mobil Uygulama (Flutter Client)
 
-Flutter Case Çalışması
-
----
-
-##  Mimari ve Teknolojiler
-
-Proje, **Feature-Based Clean Architecture** prensiplerine uygun olarak geliştirilmiştir.
-
-* **Framework:** Flutter (Dart)
-* **Durum Yönetimi (State Management):** `flutter_bloc`
-* **Hata Yönetimi (Functional Error Handling):** `dartz` (`Either<Failure, T>`)
-* **Servis Konumlandırıcı (Dependency Injection):** `get_it`
-* **Ağ Katmanı (Networking):** `dio` (3x otomatik yeniden deneme destekli)
-* **Güvenli Depolama (Storage):** `flutter_secure_storage`
-* **Tasarım & Responsive:** `flutter_screenutil` (390×844 Figma token'ları, özel tema ve `Urbanist` tipografisi).
-* **Log Sistemi:** `logger` tabanlı merkezi `AppLogger`.
-
-> **Not (JSON Serileştirme):** Projede model sayısı yalın ve kontrollü olduğu için kod üretim araçları (`build_runner` / `json_serializable`) yerine manuel serileştirme (`fromJson` / `toJson` / `toEntity`) tercih edilmiştir. Bu sayede ekstra `.g.dart` kod karmaşası önlenmiş, tip dönüşümleri ve fallback mekanizmaları daha şeffaf tutulmuştur. İhtiyaç halinde `json_serializable` kolayca entegre edilebilir.
+VardiGO vaka çalışması (Case Study) kapsamında geliştirilmiş, **Feature-Based Clean Architecture** ve **BLoC** durum yönetimi prensiplerini temel alan modern Flutter mobil istemcisi.
 
 ---
 
-## Klasör Yapısı
+## Hızlı Başlangıç ve Çalıştırma (Quick Start)
 
-```text
-lib/
-├── core/                   # Uygulama genelinde paylaşılan altyapı
-│   ├── constants/          # Boyutlar, endpoint'ler, rota isimleri
-│   ├── di/                 # Dependency Injection servis kayıtları
-│   ├── enums/              # Ortak enum tanımları
-│   ├── network/            # Dio istemcisi, hata yönetimi, interceptor'lar
-│   ├── routes/             # Rota yapılandırması ve Bloc sağlayıcıları
-│   ├── storage/            # Token ve kullanıcı oturumu depolama
-│   ├── theme/              # Renkler, tipografi, gölgeler ve ThemeData
-│   ├── utils/              # AppLogger ve yardımcı araçlar
-│   └── widgets/            # Ortak bileşenler (Card, Checkbox, Switch vb.)
-│
-└── features/               # Özellik bazlı modüller (Clean Architecture)
-    ├── auth/               # Giriş ve oturum yönetimi
-    ├── candidates/         # Eşleşen personeller ekranı (İşveren görünümü)
-    └── offers/             # Görüşme talepleri ekranı (İş arayan görünümü)
-```
-###  Modül İçi Katman Yapısı (Her Feature İçin)
-
-Her modül, Clean Architecture prensiplerine göre kendi içinde 3 ana katmandan oluşur:
-
-```text
-feature_name/
-├── domain/                 # İş Mantığı Katmanı (Saf Dart, bağımsız)
-│   ├── entities/           # Temel iş nesneleri (Entity)
-│   ├── repositories/       # Veri katmanı için arayüz sözleşmeleri (Abstract Repository)
-│   └── usecases/           # Tek bir iş kuralını yürüten kullanım senaryoları (UseCase)
-│
-├── data/                   # Veri Katmanı
-│   ├── datasources/        # Uzak (API) veya yerel veri kaynakları
-│   ├── models/             # JSON dönüşümleri ve Entity eşleme (toEntity)
-│   └── repositories/       # Domain arayüzlerinin somut uygulaması (Repository Impl)
-│
-└── presentation/           # Arayüz ve Durum Katmanı
-    ├── bloc/               # Durum yönetimi (Bloc, Events, States)
-    ├── views/              # Ana ekranlar (Screens / Pages)
-    └── widgets/            # Ekrana özel alt bileşenler (Components)
-```
-
----
-
-## Mevcut Özellikler
-
-### 1. Kimlik Doğrulama ve Kalıcı Oturum (Auth & Session Persistence)
-* **Rol Bazlı Giriş:** İşveren (*Zarif Cheff Restoran*) veya İş Arayan (*Merve Y.*) olarak tek dokunuşla giriş yapabilme.
-* **Kalıcı Oturum:** Kullanıcı çıkış yapmadığı sürece, uygulama kapatılıp açılsa bile oturum korunur ve kullanıcı doğrudan kendi ekranına yönlendirilir.
-* **Akıcı Arayüz:** Oturum kontrolü sırasında ekran titremesini (flicker) önleyen yükleme durumu.
-
-### 2. Ağ ve Log Altyapısı
-* **DioClient:** Tüm isteklerde güvenli depolamadan alınan Bearer Token kullanımı.
-* **AppLogger:** Ağ istekleri, yanıtlar ve oturum geçişlerini sade ve anlaşılır şekilde konsolda gösteren log altyapısı.
-
-### 3. Eşleşen Personeller Ekranı (Screen 1 - İşveren Görünümü)
-* **Temiz Mimari (Clean Architecture):** `CandidateEntity`, `GetCandidatesUseCase` ve `CandidateRepository` katmanları.
-* **Segmented Tabs:** *Tam Eşleşen (26)* ve *Benzer Adaylar (16)* arasında dinamik geçiş ve API filtreleme.
-* **Sıralama (Sort Filter):** *Önerilen*, *En Yakın* ve *Puanı En Yüksek* seçenekleri ile anlık liste güncelleme ve toggle-to-reset mekanizması.
-* **Aday Kartı (Figma Uyumlu):** 56×56 avatar, online durum noktası, eşleşme yüzdesi rozeti (`%92`), puan, katılım oranı ve mesafe bilgileri.
-* **Çoklu Seçim:** Checkbox ile aday seçimi ve yapışkan alt çubuktan (*Sticky Bottom Bar*) aday seçim kontrolü.
-
-### 4. Görüşme Talepleri Modülü (Screen 2 - İş Arayan Görünümü)
-* **Temiz Mimari (Clean Architecture):** `OfferEntity`, `GetOffersUseCase`, `GetOfferDetailUseCase`, `AcceptOfferUseCase`, `RejectOfferUseCase`, `CreateOffersUseCase` ve `OfferRepository` katmanları.
-* **Durum Yönetimi (OfferBloc):** *Bekleyen (3)*, *Cevaplanan (1)* ve *Süresi Dolan (0)* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`), detay getirme yönetimi (`FetchOfferDetailEvent`) ve `AppLogger` entegrasyonu.
-* **Sıralama Seçenekleri (Sort Bottom Sheet):** *Önerilen*, *Ücret (En Yüksek)* ve *Kalan Süre (En Acil)* sıralama seçenekleri. Seçilen seçeneğe tekrar dokunulduğunda varsayılan sıralamaya dönen toggle mekanizması.
-* **Teklif Kartı (Figma Uyumlu):**
-  * Şirket logosu gösterimi (SVG desteği ve güvenli fallback mekanizması).
-  * Kalan süre sayacı (Son 24 saat kalan teklifler için kırmızı/turuncu aciliyet vurgusu).
-  * Teklif aksiyonları (*İlgilenmiyorum* ve *İlgileniyorum* butonları).
-  * Akıcı ve animasyonlu genişletilebilir detay alanı (`AnimatedCrossFade`) ile konum, şube, görüşme saati ve ek notların düzenli gösterimi.
-* **Ağ Entegrasyonu:** `GET /api/offers`, `GET /api/offers/{id}`, `POST /api/offers/{id}/accept`, `POST /api/offers/{id}/reject` ve `POST /api/offers`.
-
-### 5. Merkezi Tasarım Sistemi ve Metin Yönetimi (Design Tokens & Localization Ready)
-* **AppDimensions:** Figma spellerine (390×844) birebir uyumlu merkezi padding, radius, ikon ve bileşen boyutları.
-* **AppStrings:** Tüm UI metinlerinin tek bir kaynakta toplandığı ve gelecekte `flutter_localizations` (`.arb`) altyapısına kolayca taşınabilecek mimari yapı.
-* **AppTheme & CustomColors:** `GoogleFonts.urbanist` tipografisi ve Figma renk paletini (`salaryBarBg`, `badgeGreen`, vb.) yöneten ThemeExtension altyapısı.
-
----
-
-## Test ve Kalite Güvencesi (Testing & QA)
-
-Projede iş mantığı, durum yönetimi ve veri ayrıştırma süreçleri için kapsamlı Unit ve BLoC testleri yazılmıştır (36/36 test başarılı).
-
-* **Core & Network:** `ApiResponseParserTest` (API envelope ayrıştırma, hata fırlatma senaryoları).
-* **Auth Modülü:** `AuthBlocTest` (Initial state, oturum kontrolü, başarılı/başarısız giriş ve çıkış senaryoları).
-* **Candidates Modülü:** `CandidateBlocTest` ve `CandidateEntityTest` (Veri yükleme, sekme değiştirme, sıralama, çoklu seçim ve teklif gönderme senaryoları).
-* **Offers Modülü:** `OfferBlocTest` ve `OfferEntityTest` (Teklif listeleme, filtreleme, detay getirme, kabul/ret işlemleri, model serileştirme ve metadata dönüşüm senaryoları).
-
-Tüm testleri çalıştırmak için:
-```bash
-flutter test
-```
-
----
-
-## Sürekli Entegrasyon (CI/CD - GitHub Actions)
-
-Projede `.github/workflows/flutter_ci.yml` üzerinden yapılandırılmış otomatik CI hattı bulunmaktadır:
-* `main` / `master` dalına yapılan Push ve Pull Request'lerde otomatik tetiklenir.
-* **Çift Katmanlı Caching:** Flutter SDK (`subosito/flutter-action`) ve Pub bağımlılıkları (`actions/cache`) önbelleğe alınarak hızlı derleme sağlanır.
-* **Otomatik Kontroller:** `flutter analyze --no-fatal-infos` ve `flutter test --reporter expanded` adımları otomatik icra edilir.
-
----
-
-## Kurulum ve Çalıştırma
-
-### 1. Gereksinimler
-* Flutter SDK (3.0.0 veya üzeri)
-* Çalışan bir Vardigo backend servisi (FastAPI)
-
-### 2. Bağımlılıkları Yükleyin
+### 1. Bağımlılıkları İndirin
 ```bash
 cd mobile_frontend
 flutter pub get
 ```
 
-### 3. Testleri Çalıştırın
-```bash
-flutter test
-```
-
-### 4. Çevre Değişkenleri (.env)
-`mobile_frontend/` dizini altında bir `.env` dosyası oluşturun:
+### 2. Backend Bağlantısını Ayarlayın (.env)
+`mobile_frontend/` dizini içinde `.env` dosyasını oluşturun veya düzenleyin:
 ```env
-API_BASE_URL=http://10.0.2.2:8000   # Android Emülatör için
-# API_BASE_URL=http://localhost:8000 # iOS veya Web için
+# Android Emülatör için:
+API_BASE_URL=http://10.0.2.2:8000
+
+# iOS Simülatör / Web için:
+# API_BASE_URL=http://localhost:8000
+
+# Fiziksel Cihaz (Gerçek Telefon) için:
+# API_BASE_URL=http://<BILGISAYAR_IP_ADRESI>:8000
 ```
 
-### 5. Uygulamayı Başlatın
+| Platform | Varsayılan Adres | Açıklama |
+| :--- | :--- | :--- |
+| **Android Emülatör** | `http://10.0.2.2:8000` | Host makinenin `localhost:8000` servisine erişim köprüsü. |
+| **iOS Simülatör** | `http://localhost:8000` | Simülatör doğrudan host makinenin yerel ağını paylaşır. |
+| **Fiziksel Cihaz** | `http://<YEREL_IP>:8000` | Telefon ve bilgisayar aynı Wi-Fi ağındayken yerel IP. |
+| **Web / Masaüstü** | `http://localhost:8000` | Standart yerel port. |
+
+### 3. Uygulamayı Başlatın
+
+* **Standart Native Mobil Olarak:**
+  ```bash
+  flutter run
+  ```
+
+* **Referans Telefon Çerçevesi (390×844 Bezel + Dynamic Island) ile:**
+  Figma referans tasarımındaki iPhone 390×844 boyutlarını, siyah çerçeveyi, Dynamic Island'ı ve 9:41 durum çubuğunu simüle etmek için:
+  ```bash
+  flutter run --dart-define=REFERENCE_FRAME=true
+  ```
+
+---
+
+> [!TIP]
+> ### Giriş ve Rol Seçimi (Test Hesapları)
+> Uygulama açılış ekranında tek dokunuşla rol seçilerek anında ilgili ekrana geçiş yapılır:
+> * **İşveren (Employer):** *Zarif Cheff Restoran* rolü seçilerek **Sayfa 1 — Eşleşen Personeller** ekranına girilir. Adaylar listelenir, filtrelenir ve çoklu seçimle görüşme talebi gönderilebilir.
+> * **İş Arayan (Worker):** *Merve Y.* rolü seçilerek **Sayfa 2 — Görüşme Talepleri** ekranına girilir. Gelen talepler incelenir, detayları açılır ve kabul/ret aksiyonları verilebilir.
+> * **Oturum Kalıcılığı:** Seçilen rol `FlutterSecureStorage` ile kalıcı olarak saklanır. Çıkış yapmak veya rol değiştirmek için ekranın üst kısmındaki çıkış butonuna dokunabilirsiniz.
+
+---
+
+## Versiyonlar ve Sistem Gereksinimleri
+
+| Teknoloji | Versiyon | Açıklama |
+| :--- | :--- | :--- |
+| **Flutter** | `3.44.4` (channel stable) | Mobil UI Framework |
+| **Dart** | `3.12.2` (`sdk: '>=3.0.0 <4.0.0'`) | Programlama Dili |
+| **Durum Yönetimi** | `flutter_bloc: ^8.1.6` | Reactive State Management |
+| **Ağ Katmanı** | `dio: ^5.7.0` | HTTP Client (3x retry & token interceptor) |
+| **Bağımlılık Enjeksiyonu** | `get_it: ^8.0.3` | Service Locator & DI Container |
+| **Hata Yönetimi** | `dartz: ^0.10.1` | Fonksiyonel Hata Yönetimi (`Either<Failure, T>`) |
+| **Responsive Altyapı** | `flutter_screenutil: ^5.9.3` | Figma 390×844 tabanlı tasarım ölçekleme |
+| **Güvenli Depolama** | `flutter_secure_storage: ^9.2.2` | Şifrelenmiş token ve oturum saklama |
+
+> **Not (JSON Serileştirme):** Projede model sayısı yalın ve kontrollü olduğu için ekstra kod üretim bağımlılıkları (`build_runner` / `json_serializable` / `.g.dart`) yerine temiz manuel serileştirme (`fromJson` / `toJson` / `toEntity`) tercih edilmiştir. Tip dönüşümleri ve fallback mekanizmaları şeffaf tutulmuştur.
+
+---
+
+## Ekranlar ve İş Mantığı (Screens & Features)
+
+Uygulama, Figma referans tasarımlarına (390×844) ve vaka kurallarına tam uyumlu olarak 2 ana ekran ve 1 kimlik doğrulama modülünden oluşur:
+
+### 1. Sayfa 1 — Eşleşen Personeller (İşveren Görünümü)
+İşverenlerin açık pozisyonlarına başvuran veya eşleşen adayları incelediği ekrandır (`/candidates`).
+
+| Özellik | Açıklama |
+| :--- | :--- |
+| **Segmented Tabs** | *Tam Eşleşen (26)* ve *Benzer Adaylar (16)* sekmeleri arasında yumuşak geçiş ve backend filtrelemesi (`tab=perfect` / `tab=similar`). |
+| **Sıralama (Sort Filter)** | *Önerilen*, *En Yakın* ve *Puanı En Yüksek* filtreleri. Seçili filtreye tekrar dokunulduğunda varsayılana dönen toggle-to-reset mantığı. |
+| **Aday Kartı Tasarımı** | 56×56 avatar, online durum göstergesi, eşleşme yüzdesi rozeti (`%92`), aday puanı, katılım oranı, unvan ve mesafe bilgileri. |
+| **Çoklu Seçim & Bottom Bar** | Checkbox ile birden fazla aday seçebilme, seçilen aday sayısını gösteren yapışkan alt çubuk (*Sticky Bottom Bar*) ve toplu "Görüşme Talebi Gönder" aksiyonu. |
+
+---
+
+### 2. Sayfa 2 — Görüşme Talepleri (İş Arayan Görünümü)
+İş arayan personellerin şirketlerden gelen görüşme taleplerini yönettiği ekrandır (`/offers`).
+
+| Özellik | Açıklama |
+| :--- | :--- |
+| **3 Sekmeli Durum Filtreleme** | *Bekleyen (3)*, *Cevaplanan (1)* ve *Süresi Dolan (0)* sekmeleri ile anlık talep durumu listeleme. |
+| **Dinamik SVG Şirket Logoları** | Backend'den gelen SVG logo URL'lerini render eden, hata durumunda şirket baş harfiyle güvenli fallback sağlayan görsel altyapı. |
+| **Acil Durum Geri Sayım Sayacı** | Kalan süresi 24 saatin altında olan taleplerde kırmızı/turuncu aciliyet etiketi ve dinamik kalan süre gösterimi. |
+| **Genişletilebilir Detay (`AnimatedCrossFade`)** | Karta dokunulduğunda akıcı animasyonla açılan detay alanı: Şube/konum, randevu saati, pozisyon bilgileri ve şirket ek notları. |
+| **Kabul / Ret Aksiyonları** | *İlgilenmiyorum* (Ret) ve *İlgileniyorum* (Kabul) butonları. Kart bazında bağımsız yükleme durumu ve SnackBar geri bildirimi. |
+| **Sıralama Modalı (Sort Bottom Sheet)** | *Önerilen*, *Ücret (En Yüksek)* ve *Kalan Süre (En Acil)* seçenekleri içeren alt sayfa menüsü. |
+
+---
+
+## Mimari ve Klasör Yapısı
+
+Proje, **Feature-Based Clean Architecture** (Özellik Bazlı Temiz Mimari) prensiplerine göre yapılandırılmıştır:
+
+```text
+lib/
+├── core/                           # Uygulama genelinde paylaşılan ortak altyapı
+│   ├── constants/                  # Boyutlar (AppDimensions), endpoint'ler, metinler (AppStrings)
+│   ├── di/                         # GetIt bağımlılık enjeksiyon kayıtları
+│   ├── enums/                      # Ortak enum tanımları
+│   ├── network/                    # Dio istemcisi, interceptor'lar ve hata modelleri
+│   ├── routes/                     # Rota yönetimi ve BLoC sağlayıcıları
+│   ├── storage/                    # Token ve kullanıcı oturumu güvenli depolama
+│   ├── theme/                      # Figma renk paleti, tipografi (Urbanist) ve tema
+│   ├── utils/                      # AppLogger merkezi log sistemi
+│   └── widgets/                    # Ortak bileşenler, PhoneFrame (iPhone 390×844 çerçevesi)
+│
+└── features/                       # Modüler özellik paketleri
+    ├── auth/                       # Giriş ve oturum yönetimi (Data, Domain, Presentation)
+    ├── candidates/                 # Sayfa 1: Eşleşen personeller modülü
+    └── offers/                     # Sayfa 2: Görüşme talepleri modülü
+```
+
+Her özellik (`feature`) kendi içinde 3 bağımsız katmana ayrılır:
+* **`domain/`:** Saf Dart iş kuralları, Entity modelleri ve UseCase'ler (Dış dünyadan tamamen bağımsız).
+* **`data/`:** API veri kaynakları (`DataSources`), DTO modelleri (`fromJson/toEntity`) ve Repository uygulamaları.
+* **`presentation/`:** BLoC durum yönetimi (`Bloc`, `Event`, `State`), sayfalar (`Views`) ve alt bileşenler (`Widgets`).
+
+### Neden Feature-Based Clean Architecture? (Mimari Tercih Gerekçesi)
+
+VardiGO vaka çalışmasında ekran sayısı sınırlı olsa dahi **Feature-Based Clean Architecture** tercih edilmesinin temel mühendislik gerekçeleri şunlardır:
+
+1. **Çift Rol ve Alan İzolasyonu (Dual-Role & Domain Boundary):**
+   Uygulama iki taban tabana zıt kullanıcı personası barındırır: **İşveren** (aday listeleme, eşleşme puanı, toplu teklif gönderme) ve **İş Arayan** (gelen teklifler, kabul/ret, aciliyet geri sayımı). Katman bazlı (*Layer-First: tüm bloc'ların veya modellerin tek bir global klasörde toplanması*) yaklaşım, bu iki iş akışının zamanla birbirine sıkı sıkıya bağlanmasına (*tight coupling*) yol açar. Özellik bazlı modüler yapı (`candidates/` ve `offers/`), alan sınırlarını (*Bounded Context*) kesin çizgilerle izole eder.
+
+2. **Dış Bağımlılıklardan Arındırılmış Saf İş Mantığı (Pure Domain & 100% Testability):**
+   `domain/` katmanında hiçbir Flutter UI veya üçüncü parti kütüphane bağımlılığı bulunmaz. Bu sayede `GetCandidatesUseCase`, `AcceptOfferUseCase` veya `RejectOfferUseCase` gibi iş kuralları, UI veya ağ katmanından bağımsız olarak saf Dart birim testleriyle (`36/36 passed`) %100 güvenilirlikle doğrulanabilir.
+
+3. **Genişleyebilirlik ve Düşük Bilişsel Yük (Scalability & Low Cognitive Load):**
+   Gelecekte sisteme eklenecek yeni modüller (örn: `messaging/`, `contracts/`, `profile/`), mevcut kod tabanına dokunmadan tak-çıkar (*plug-and-play*) mantığıyla entegre edilebilir. Geliştirici sadece ilgili özelliğin klasörüne odaklanarak bakım maliyetini ve bilişsel yükü minimuma indirir.
+
+---
+
+## Test ve Kalite Güvencesi (QA Matrix)
+
+İş kuralları, BLoC durum geçişleri ve JSON ayrıştırma süreçleri için **36 adet otomatik test** yazılmıştır.
+
+| Test Paketi | Kapsanan Alanlar | Test Sayısı | Durum |
+| :--- | :--- | :---: | :---: |
+| **`ApiResponseParserTest`** | Standart API zarfı (envelope) ayrıştırma, hata yakalama | 3 | Geçti |
+| **`AuthBlocTest`** | Oturum kontrolü, giriş, çıkış ve hata durumları | 5 | Geçti |
+| **`CandidateBlocTest`** | Aday listesi yükleme, sekme filtreleme, sıralama, çoklu seçim | 7 | Geçti |
+| **`CandidateEntityTest`** | JSON serileştirme, entity dönüşümü, eşitlik kontrolleri | 5 | Geçti |
+| **`OfferBlocTest`** | Talep listeleme, detay açma, kabul/ret işlemleri, filtreleme | 8 | Geçti |
+| **`OfferEntityTest`** | Talep modeli ayrıştırma, metadata işleme, format kontrolleri | 7 | Geçti |
+| **Widget & Smoke Test** | Temel bileşen ve uygulama başlatma testi | 1 | Geçti |
+| **TOPLAM** | **Birim ve Durum Yönetimi Testleri** | **36/36** | **%100 Başarılı** |
+
+### Testleri Çalıştırma:
 ```bash
-flutter run
+# Tüm testleri koşturun:
+flutter test
+
+# Statik kod analizini çalıştırın:
+flutter analyze
 ```

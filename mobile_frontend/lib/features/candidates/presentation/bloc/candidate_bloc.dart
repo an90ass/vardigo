@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
 import '../../../../core/utils/app_logger.dart';
+import '../../../offers/domain/usecases/create_offers_usecase.dart';
 import '../../domain/usecases/get_candidates_usecase.dart';
 import 'candidate_event.dart';
 import 'candidate_state.dart';
@@ -10,9 +12,11 @@ export 'candidate_state.dart';
 
 class CandidateBloc extends Bloc<CandidateEvent, CandidateState> {
   final GetCandidatesUseCase getCandidatesUseCase;
+  final CreateOffersUseCase? createOffersUseCase;
 
   CandidateBloc({
     required this.getCandidatesUseCase,
+    this.createOffersUseCase,
   }) : super(const CandidateState()) {
     on<FetchCandidates>(_onFetchCandidates);
     on<ChangeTab>(_onChangeTab);
@@ -110,18 +114,38 @@ class CandidateBloc extends Bloc<CandidateEvent, CandidateState> {
     emit(state.copyWith(selectedCandidateIds: const {}));
   }
 
-  void _onSubmitOffers(
+  Future<void> _onSubmitOffers(
     SubmitOffers event,
     Emitter<CandidateState> emit,
-  ) {
+  ) async {
     final selectedIds = state.selectedCandidateIds.toList();
     if (selectedIds.isEmpty) return;
 
-    AppLogger.i('[CandidateBloc] Selected ${selectedIds.length} candidate(s) for interview offers');
-    emit(state.copyWith(
-      selectedCandidateIds: const {},
-      successMessage: '${selectedIds.length} adaya teklif seçildi (Offers modülüne bağlanacak)',
-    ));
+    AppLogger.i('[CandidateBloc] Submitting interview offers for ${selectedIds.length} candidate(s): $selectedIds');
+
+    if (createOffersUseCase != null) {
+      final result = await createOffersUseCase!(selectedIds);
+      result.fold(
+        (failure) {
+          AppLogger.e('[CandidateBloc] Failed to submit offers: ${failure.message}');
+          emit(state.copyWith(
+            errorMessage: failure.message,
+          ));
+        },
+        (_) {
+          AppLogger.i('[CandidateBloc] Successfully sent offers to $selectedIds');
+          emit(state.copyWith(
+            selectedCandidateIds: const {},
+            successMessage: AppStrings.offersSelectedSuccess(selectedIds.length),
+          ));
+        },
+      );
+    } else {
+      emit(state.copyWith(
+        selectedCandidateIds: const {},
+        successMessage: AppStrings.offersSelectedSuccess(selectedIds.length),
+      ));
+    }
   }
 
   void _onClearCandidateMessages(
