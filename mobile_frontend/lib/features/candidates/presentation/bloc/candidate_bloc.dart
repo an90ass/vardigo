@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/enums/app_enums.dart';
 import '../../../../core/utils/app_logger.dart';
 import '../../domain/usecases/get_candidates_usecase.dart';
 import 'candidate_event.dart';
@@ -26,13 +27,41 @@ class CandidateBloc extends Bloc<CandidateEvent, CandidateState> {
     FetchCandidates event,
     Emitter<CandidateState> emit,
   ) async {
-    AppLogger.i('[CandidateBloc] Fetching candidates: tab=${state.activeTab.value}, sort=${state.activeSort.value}');
-    emit(state.copyWith(status: CandidateStatus.loading, clearError: true));
+    if (state.candidates.isEmpty) {
+      emit(state.copyWith(status: CandidateStatus.loading, clearError: true));
+    }
+    await _loadData(emit, tab: state.activeTab, sort: state.activeSort);
+  }
 
-    final result = await getCandidatesUseCase(
-      tab: state.activeTab,
-      sort: state.activeSort,
-    );
+  Future<void> _onChangeTab(
+    ChangeTab event,
+    Emitter<CandidateState> emit,
+  ) async {
+    if (event.tab == state.activeTab) return;
+    AppLogger.d('[CandidateBloc] Tab changed to ${event.tab.value}');
+    emit(state.copyWith(
+      activeTab: event.tab,
+      selectedCandidateIds: const {},
+    ));
+    await _loadData(emit, tab: event.tab, sort: state.activeSort);
+  }
+
+  Future<void> _onChangeSort(
+    ChangeSort event,
+    Emitter<CandidateState> emit,
+  ) async {
+    if (event.sort == state.activeSort) return;
+    AppLogger.d('[CandidateBloc] Sort changed to ${event.sort.value}');
+    emit(state.copyWith(activeSort: event.sort));
+    await _loadData(emit, tab: state.activeTab, sort: event.sort);
+  }
+
+  Future<void> _loadData(
+    Emitter<CandidateState> emit, {
+    required CandidateTab tab,
+    required CandidateSort sort,
+  }) async {
+    final result = await getCandidatesUseCase(tab: tab, sort: sort);
 
     result.fold(
       (failure) {
@@ -43,10 +72,10 @@ class CandidateBloc extends Bloc<CandidateEvent, CandidateState> {
         ));
       },
       (data) {
-        AppLogger.i('[CandidateBloc] Loaded ${data.candidates.length} candidates (Perfect: ${data.totalPerfect}, Similar: ${data.totalSimilar})');
-        final initialSelection = state.selectedCandidateIds.isEmpty && data.candidates.isNotEmpty
+        final initialSelection = tab == CandidateTab.perfect && data.candidates.isNotEmpty
             ? {data.candidates.first.id}
             : state.selectedCandidateIds;
+
         emit(state.copyWith(
           status: CandidateStatus.success,
           candidates: data.candidates,
@@ -57,29 +86,6 @@ class CandidateBloc extends Bloc<CandidateEvent, CandidateState> {
         ));
       },
     );
-  }
-
-  void _onChangeTab(
-    ChangeTab event,
-    Emitter<CandidateState> emit,
-  ) {
-    if (event.tab == state.activeTab) return;
-    AppLogger.d('[CandidateBloc] Tab changed to ${event.tab.value}');
-    emit(state.copyWith(
-      activeTab: event.tab,
-      selectedCandidateIds: const {},
-    ));
-    add(const FetchCandidates());
-  }
-
-  void _onChangeSort(
-    ChangeSort event,
-    Emitter<CandidateState> emit,
-  ) {
-    if (event.sort == state.activeSort) return;
-    AppLogger.d('[CandidateBloc] Sort changed to ${event.sort.value}');
-    emit(state.copyWith(activeSort: event.sort));
-    add(const FetchCandidates());
   }
 
   void _onToggleCandidateSelection(

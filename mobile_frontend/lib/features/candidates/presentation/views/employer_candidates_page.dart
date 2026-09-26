@@ -225,6 +225,7 @@ class EmployerCandidatesPage extends StatelessWidget {
 
   Widget _buildCandidateList(BuildContext context, CandidateState state) {
     return ListView.builder(
+      key: ValueKey(state.activeTab),
       padding: const EdgeInsets.fromLTRB(
         AppDimensions.pageHorizontalPadding,
         0.0,
@@ -237,6 +238,7 @@ class EmployerCandidatesPage extends StatelessWidget {
         final bool isSelected = state.isCandidateSelected(candidate.id);
 
         return CandidateCard(
+          key: ValueKey(candidate.id),
           candidate: candidate,
           isSelected: isSelected,
           onToggleSelect: () {

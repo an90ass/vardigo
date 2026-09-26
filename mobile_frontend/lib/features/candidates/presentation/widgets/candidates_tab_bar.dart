@@ -63,8 +63,8 @@ class CandidatesTabBar extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.fastOutSlowIn,
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.tabPillPaddingHorizontal,
