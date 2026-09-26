@@ -4,6 +4,7 @@ import '../../features/candidates/data/repositories/candidate_repository_impl.da
 import '../../features/candidates/domain/repositories/candidate_repository.dart';
 import '../../features/candidates/domain/usecases/get_candidates_usecase.dart';
 import '../../features/candidates/presentation/bloc/candidate_bloc.dart';
+import '../../features/offers/domain/usecases/create_offers_usecase.dart';
 import '../network/dio_client.dart';
 
 void initCandidatesInjection(GetIt sl) {
@@ -26,6 +27,7 @@ void initCandidatesInjection(GetIt sl) {
   sl.registerFactory<CandidateBloc>(
     () => CandidateBloc(
       getCandidatesUseCase: sl<GetCandidatesUseCase>(),
+      createOffersUseCase: sl.isRegistered<CreateOffersUseCase>() ? sl<CreateOffersUseCase>() : null,
     ),
   );
 }

@@ -12,6 +12,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<API>(() => getIt<DioClient>());
 
   initAuthInjection(getIt);
-  initCandidatesInjection(getIt);
   initOffersInjection(getIt);
+  initCandidatesInjection(getIt);
 }

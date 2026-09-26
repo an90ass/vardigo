@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from app.services.offer_service import OfferService
 from app.schemas.offer import Offer, OfferListResponse, CreateOfferRequest
 from app.schemas.common import ApiResponse, ErrorDetail
+from app.models import UserORM
 from app.models.enums import OfferStatus, OfferStatusFilter, UserRole
 from app.dependencies import get_offer_service, require_employer, require_worker
 
@@ -15,12 +16,12 @@ router = APIRouter(
 @router.get("", response_model=ApiResponse[OfferListResponse], response_model_exclude_none=True)
 def get_offers(
     status_filter: Optional[OfferStatusFilter] = OfferStatusFilter.PENDING,
-    _role: UserRole = Depends(require_worker),
+    current_user: UserORM = Depends(require_worker),
     offer_service: OfferService = Depends(get_offer_service)
 ):
 
     status_val = status_filter.value if status_filter else "pending"
-    data = offer_service.get_offers_list(status=status_val)
+    data = offer_service.get_offers_list(status=status_val, worker_id=current_user.id)
     return ApiResponse(data=data)
 
 

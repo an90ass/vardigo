@@ -5,6 +5,7 @@ import 'core/constants/app_dimensions.dart';
 import 'core/di/injection.dart';
 import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/phone_frame.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,9 @@ class VardigoApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           initialRoute: AppRoutes.initial,
           onGenerateRoute: AppRoutes.onGenerateRoute,
+          builder: (context, widget) {
+            return PhoneFrame(child: widget ?? const SizedBox.shrink());
+          },
         );
       },
     );

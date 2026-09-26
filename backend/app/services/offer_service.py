@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from app.repositories.offer_repository import OfferRepository
-from app.models import OfferORM, OfferStatus
+from app.models import OfferORM, OfferStatus, CandidateORM
 from app.schemas.offer import Offer, OfferListResponse
 
 class OfferService:
@@ -79,16 +79,16 @@ class OfferService:
             remain=remain
         )
 
-    def get_offers_list(self, status: Optional[str] = None) -> OfferListResponse:
+    def get_offers_list(self, status: Optional[str] = None, worker_id: Optional[str] = None) -> OfferListResponse:
         #  Update any expired pending offers first
         self._update_expired_offers()
 
-        #  Query matching status
-        offer_orms = self.repo.get_offers_by_status(status=status)
+        #  Query matching status scoped to worker_id
+        offer_orms = self.repo.get_offers_by_status(status=status, worker_id=worker_id)
         offers = [self._to_schema(o) for o in offer_orms]
 
-        #  Calculate pending count
-        all_pending = self.repo.get_offers_by_status(status="pending")
+        #  Calculate pending count for this worker
+        all_pending = self.repo.get_offers_by_status(status="pending", worker_id=worker_id)
         pending_count = len(all_pending)
 
         return OfferListResponse(pendingCount=pending_count, offers=offers)
@@ -119,7 +119,15 @@ class OfferService:
                     pass
 
             if existing_pending:
-                raise ValueError(f"'{w_id}' id'li adaya zaten açık bir teklif bulunmaktadır.")
+                cand_name = None
+                if existing_pending.candidate:
+                    cand_name = existing_pending.candidate.name
+                if not cand_name:
+                    cand = self.repo.db.query(CandidateORM).filter(CandidateORM.id == w_id).first()
+                    if cand:
+                        cand_name = cand.name
+                display_name = cand_name if cand_name else f"'{w_id}'"
+                raise ValueError(f"{display_name} adlı adaya zaten açık bir görüşme talebi bulunmaktadır.")
 
             new_id = f"o_{str(uuid.uuid4())[:8]}"
             offer_orm = OfferORM(

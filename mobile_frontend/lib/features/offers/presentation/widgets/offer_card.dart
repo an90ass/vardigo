@@ -216,93 +216,87 @@ class _OfferCardState extends State<OfferCard> {
   Widget _buildActionButtons(BuildContext context) {
     final textTheme = context.textTheme;
 
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: widget.isProcessing ? null : widget.onReject,
-            borderRadius: BorderRadius.circular(AppDimensions.radius8),
-            child: Container(
-              height: AppDimensions.buttonHeight36,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEECEE),
-                borderRadius: BorderRadius.circular(AppDimensions.radius8),
-              ),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    AppIconEnum.close.svgPath,
-                    width: AppDimensions.iconSize16,
-                    height: AppDimensions.iconSize16,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.error,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  const SizedBox(width: AppDimensions.gap6),
-                  Text(
-                    AppStrings.notInterestedButton,
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.error,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: AppDimensions.gap12),
-        Expanded(
-          child: InkWell(
-            onTap: widget.isProcessing ? null : widget.onAccept,
-            borderRadius: BorderRadius.circular(AppDimensions.radius8),
-            child: Container(
-              height: AppDimensions.buttonHeight36,
-              decoration: BoxDecoration(
-                color: AppColors.green,
-                borderRadius: BorderRadius.circular(AppDimensions.radius8),
-              ),
-              alignment: Alignment.center,
-              child: widget.isProcessing
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+    return Opacity(
+      opacity: widget.isProcessing ? 0.5 : 1.0,
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: widget.isProcessing ? null : widget.onReject,
+              borderRadius: BorderRadius.circular(AppDimensions.radius8),
+              child: Container(
+                height: AppDimensions.buttonHeight36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEECEE),
+                  borderRadius: BorderRadius.circular(AppDimensions.radius8),
+                ),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      AppIconEnum.close.svgPath,
+                      width: AppDimensions.iconSize16,
+                      height: AppDimensions.iconSize16,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.error,
+                        BlendMode.srcIn,
                       ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          AppIconEnum.check.svgPath,
-                          width: AppDimensions.iconSize16,
-                          height: AppDimensions.iconSize16,
-                          colorFilter: const ColorFilter.mode(
-                            Colors.white,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        const SizedBox(width: AppDimensions.gap6),
-                        Text(
-                          AppStrings.interestedButton,
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
                     ),
+                    const SizedBox(width: AppDimensions.gap6),
+                    Text(
+                      AppStrings.notInterestedButton,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: AppDimensions.gap12),
+          Expanded(
+            child: InkWell(
+              onTap: widget.isProcessing ? null : widget.onAccept,
+              borderRadius: BorderRadius.circular(AppDimensions.radius8),
+              child: Container(
+                height: AppDimensions.buttonHeight36,
+                decoration: BoxDecoration(
+                  color: AppColors.green,
+                  borderRadius: BorderRadius.circular(AppDimensions.radius8),
+                ),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      AppIconEnum.check.svgPath,
+                      width: AppDimensions.iconSize16,
+                      height: AppDimensions.iconSize16,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const SizedBox(width: AppDimensions.gap6),
+                    Text(
+                      AppStrings.interestedButton,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
