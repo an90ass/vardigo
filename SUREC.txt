@@ -6,29 +6,38 @@ VARDIGO CASE STUDY — SUREC NOTU
 ------------------------------------------------------------
 - Mobil: Flutter 3.44.4 (Dart 3.12.2), flutter_bloc (State Management), dartz (Functional Error Handling), get_it (DI), dio (Ağ katmanı), flutter_screenutil (390×844 Figma Responsive).
 - Backend: Python 3.11 (FastAPI, MVC Mimarisi, SQLite + SQLAlchemy ORM, Docker & Compose), Pydantic v2, Uvicorn.
-- Yapay Zeka & Asistan: Google Antigravity (Gemini 2.5 Pro) pair-programming asistanı olarak mimari planlama, token analizi ve test senaryolarının inşasında kullanıldı.
+- Yapay Zeka & Asistanlar: Google Antigravity (Gemini 2.5 Pro ve Claude); test dosyalarinin yazilmasi, sabit veri/sablon dosyalarinin olusturulmasi, kod inceleme (code review) ve gelistirme surecini hizlandirmak adina pair-programming asistanlari olarak kullanildi.
 - Tasarım Araçları: Canva (Adaptive icon ve Splash safe-zone boyutlandırma).
 
 2. GELISME SIRASI VE ADIMLAR
 ------------------------------------------------------------
-1. Backend & Veri Altyapisi (FastAPI + Docker):
-   Ilk adimda backend servisi insa edildi. SQLite ve SQLAlchemy ile seed verisi kalici hale getirildi, unvan/sehir/sektor agirlikli eslestirme motoru (>=80 puan kurali), REST uclari ve Dockerfile/Compose yapilandirildi.
-2. Mobil Temel & Design Tokens (Figma 390×844):
-   Urbanist tipografisi, Figma renk paleti ve boyut token'lari (AppDimensions, AppColors) cikarildi. DioClient (3x retry, token interceptor) ve GetIt DI kuruldu.
-3. Mimari Kurgu (Feature-Based Clean Architecture):
-   Isveren ve Is Arayan rollerinin bagimsiz calisabilmesi icin features (auth, candidates, offers) altinda domain/data/presentation katmanlari olusturuldu.
-4. Sayfa 1 — Eslesen Personeller (Isveren Gorunumu):
-   Segmented tabs (Tam Eslesen / Benzer), siralama filtreleri, aday karti (56px avatar, rozet, puan), coklu secim ve Sticky Bottom Bar gelistirildi.
-5. Sayfa 2 — Gorusme Talepleri (Is Arayan Gorunumu):
-   3 sekmeli durum filtreleme (Bekleyen, Cevaplanan, Suresi Dolan), dinamik SVG logolar, acil durum geri sayim sayaci, AnimatedCrossFade detay acilisi ve Sort Bottom Sheet gelistirildi.
-6. Testler, Cilalama & Teslimat:
-   36 birim ve durum yonetimi testi yazildi (36/36 passed), PhoneFrame (390×844 Bezel + Dynamic Island), adaptive launcher icon ve native splash entegre edildi.
+1. Backend & API Dogrulama:
+   FastAPI + SQLite REST servisi insa edildi → Endpoint'ler, eslestirme motoru ve seed verisi Swagger UI & Postman ile uctan uca test edilip tamamlandi.
+2. Mobil Temel, Tema & Mimari:
+   Feature-Based Clean Architecture & BLoC yapilandirildi → Figma (390×844) renk/boyut token'lari, Urbanist tipografisi, DioClient ve GetIt DI hazirlandi.
+3. Moduler Gelistirme (Giris & Aday Ekrani):
+   Auth modulu (Mock role girisi & kalicilik) tamamlandi → Sayfa 1 (Eslesen Personeller: Sekmeler, filtreler, coklu secim ve Sticky Bottom Bar) gelistirildi.
+4. Testler & CI Sureci:
+   Aday ve Auth modullerinin birim ve BLoC testleri yazildi → CI/CD dogrulamasi yapildi ve test altyapisi saglamlastirildi.
+5. Teklif Modulu & Entegrasyon (Sayfa 2):
+   Gorusme Talepleri modulu (3 durum sekmesi, AnimatedCrossFade detay, dinamik geri sayim, kabul/ret aksiyonlari ve 409 cakisma yonetimi) backend ile entegre edildi.
+6. Docker, Son Cilalama & Teslimat:
+   Tum testler (36/36 passed, 0 flutter analyze issue) kosuldu → Dockerfile & docker-compose ile backend konteynerize edildi → PhoneFrame (390×844 Bezel + Dynamic Island), adaptive icon ve native splash ile teslimata hazirlandi.
 
 3. KARSILASILAN ZORLUKLAR VE COZUMLER
 ------------------------------------------------------------
-- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme:
-  Sorun: Standart logolar Android 12+ 160dp dairesel guvenli alan sebebiyle kirpiliyordu.
-  Cozum: Canva ile %60 guvenli alan payi birakilarak vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile cozuldu.
+- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme (960×960 Standartlari):
+  Sorun: Android 12+ sisteminin zorunlu kildigi 160dp dairesel maskeleme sebebiyle standart logolarin kenarlari kirpiliyor ve goruntu bozuluyordu.
+  Cozum: Resmi Android 12 Splash standartlarina gore (arkaplanli ikonlar icin 960×960 px canvas uzerinde 640 px dairesel guvenli alan / arka plansiz icin 1152×1152 px uzerinde 768 px guvenli alan) Canva ile vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile piksel kusursuzlugunda cozuldu.
+
+- Cift Tiklama (Double-Tap) & Idempotency:
+  Sorun: Yavas agda kullanicinin butona art arda hizli basmasi sonucu mukerrer istek riski.
+  Cozum: Mobilde BLoC 'isProcessing' kilidiyle buton devre disi birakildi (Opacity 0.5); backend'de atomik 'OFFER_CONFLICT' (409) kontrolu ile cift katmanli koruma saglandi.
+
+- Zaman Dilimi Farkliligi (Timezone Drift) & Geri Sayim Senkronizasyonu (Proaktif Onlem):
+  Onem & Risk: Bloklayici bir hata olarak karsilasilmasa da, cihaz yerel saati ile sunucu saati farkindan dogabilecek hatali veya negatif sure riskini onlemek kritikti.
+  Cozum: Backend'de tum zaman damgalari ISO-8601 UTC olarak standartlastirildi; mobilde TimeUtils katmani ile DateTime.now().toUtc() karsilastirmasi yapilarak acil durumlarda (24 saatin alti) renk degistiren dinamik ve dogru bir geri sayim mimari seviyede saglandi.
+
 - Siralama (Sort) Toggle-to-Reset Davranisi:
   Sorun: Secili filtreye tekrar dokunuldugunda varsayilan siralamaya donme ihtiyaci.
   Cozum: Tiklanan filtre zaten aktifse varsayilana resetleyen cift yonlu toggle state mantigi uygulandi.
@@ -36,5 +45,7 @@ VARDIGO CASE STUDY — SUREC NOTU
 4. BILEREK YAPILMAYANLAR / TERCIHLER
 ------------------------------------------------------------
 - build_runner / json_serializable: Kod kalabaligini onlemek ve tam tip guvenligi saglamak adina temiz manuel serilestirme tercih edildi.
+- .env Dosyasi Guvenligi: Test surecinin sifir eforla (Zero-Setup) aninda calisabilmesi adina .env dosyasi repoda acik birakildi; su asama icin production seviyesi env gizleme ile vakit harcanmadi.
+- Harici Redis Bagimliligi: Projenin 'Zero-Config' (ekstra sunucu/hizmet gerektirmeden tek komutla calisma) hedefine sadik kalmak icin Redis yerine SQLite atomik kontrolleri ve BLoC UI kilidi tercih edildi.
 - Kod Ici Yorum Satirlari: Kodun kendini aciklamasi (Clean Code) ilkesi geregi dart dosyalarinda gereksiz yorumlardan kacinildi.
 - Fazladan Auth Ekrani: Case akisina sadik kalinarak tek dokunusla rol degistiren sade mock auth tercih edildi.

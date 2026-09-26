@@ -12,7 +12,8 @@ minimum test adımlarını ve uçtan uca senaryolarını test etmek amacıyla ha
 
 A) BACKEND SERVİSİNİ BAŞLATMA:
    Yöntem 1 (Docker Compose - Önerilen):
-     docker-compose up -d --build
+     (Önkoşul: Docker Desktop uygulamasının açık ve çalışıyor olduğundan emin olun)
+     docker compose up -d --build
      API: http://localhost:8000
      Docs: http://localhost:8000/docs
 
