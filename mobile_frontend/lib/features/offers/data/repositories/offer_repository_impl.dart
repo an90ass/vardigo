@@ -28,6 +28,20 @@ class OfferRepositoryImpl implements OfferRepository {
   }
 
   @override
+  Future<Either<Failure, OfferEntity>> getOfferDetail(String offerId) async {
+    try {
+      final model = await remoteDataSource.getOfferDetail(offerId);
+      return Right(model.toEntity());
+    } on ApiException catch (e) {
+      return Left(_mapApiException(e));
+    } catch (e) {
+      return Left(ServerFailure(
+        message: 'Teklif detayı getirilirken beklenmeyen bir hata oluştu: $e',
+      ));
+    }
+  }
+
+  @override
   Future<Either<Failure, OfferEntity>> acceptOffer(String offerId) async {
     try {
       final model = await remoteDataSource.acceptOffer(offerId);

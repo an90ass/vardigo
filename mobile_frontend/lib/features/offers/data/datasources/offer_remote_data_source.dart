@@ -7,6 +7,7 @@ import '../models/offer_model.dart';
 
 abstract class OfferRemoteDataSource {
   Future<OfferListModel> getOffers({OfferStatusFilter? filter});
+  Future<OfferModel> getOfferDetail(String offerId);
   Future<OfferModel> acceptOffer(String offerId);
   Future<OfferModel> rejectOffer(String offerId);
   Future<List<OfferModel>> createOffers(List<String> workerIds);
@@ -36,6 +37,21 @@ class OfferRemoteDataSourceImpl implements OfferRemoteDataSource {
     }
 
     throw const FormatException('Geçersiz teklif listesi verisi');
+  }
+
+  @override
+  Future<OfferModel> getOfferDetail(String offerId) async {
+    final response = await dioClient.get(
+      ApiEndpoints.offerDetail(offerId),
+      authType: ApiAuthType.bearerToken,
+    );
+
+    final data = ApiResponseParser.parseData(response.data);
+    if (data is Map<String, dynamic>) {
+      return OfferModel.fromJson(data);
+    }
+
+    throw const FormatException('Geçersiz teklif detay verisi');
   }
 
   @override

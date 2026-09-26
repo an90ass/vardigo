@@ -8,7 +8,6 @@ abstract class OfferEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Initial or refresh load of offers
 class FetchOffers extends OfferEvent {
   final bool refresh;
 
@@ -18,7 +17,15 @@ class FetchOffers extends OfferEvent {
   List<Object?> get props => [refresh];
 }
 
-// Changes the active offer filter tab (Bekleyenler, Cevaplananlar, Süresi Dolanlar)
+class FetchOfferDetailEvent extends OfferEvent {
+  final String offerId;
+
+  const FetchOfferDetailEvent(this.offerId);
+
+  @override
+  List<Object?> get props => [offerId];
+}
+
 class ChangeOfferFilter extends OfferEvent {
   final OfferStatusFilter filter;
 
@@ -28,7 +35,6 @@ class ChangeOfferFilter extends OfferEvent {
   List<Object?> get props => [filter];
 }
 
-// Worker accepts an interview offer
 class AcceptOfferEvent extends OfferEvent {
   final String offerId;
 
@@ -38,7 +44,6 @@ class AcceptOfferEvent extends OfferEvent {
   List<Object?> get props => [offerId];
 }
 
-// Worker rejects an interview offer
 class RejectOfferEvent extends OfferEvent {
   final String offerId;
 
@@ -48,7 +53,6 @@ class RejectOfferEvent extends OfferEvent {
   List<Object?> get props => [offerId];
 }
 
-// Clears transient snackbar messages
 class ClearOfferMessages extends OfferEvent {
   const ClearOfferMessages();
 }

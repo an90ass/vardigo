@@ -79,14 +79,20 @@ feature_name/
 ### 3. Eşleşen Personeller Ekranı (Screen 1 - İşveren Görünümü)
 * **Temiz Mimari (Clean Architecture):** `CandidateEntity`, `GetCandidatesUseCase` ve `CandidateRepository` katmanları.
 * **Segmented Tabs:** *Tam Eşleşen (26)* ve *Benzer Adaylar (16)* arasında dinamik geçiş ve API filtreleme.
-* **Sıralama (Sort Filter):** *Önerilen*, *En Yakın* ve *Puanı En Yüksek* seçenekleri ile anlık liste güncelleme.
+* **Sıralama (Sort Filter):** *Önerilen*, *En Yakın* ve *Puanı En Yüksek* seçenekleri ile anlık liste güncelleme ve toggle-to-reset mekanizması.
 * **Aday Kartı (Figma Uyumlu):** 56×56 avatar, online durum noktası, eşleşme yüzdesi rozeti (`%92`), puan, katılım oranı ve mesafe bilgileri.
 * **Çoklu Seçim:** Checkbox ile aday seçimi ve yapışkan alt çubuktan (*Sticky Bottom Bar*) aday seçim kontrolü.
 
 ### 4. Görüşme Talepleri Modülü (Screen 2 - İş Arayan Görünümü)
-* **Temiz Mimari (Clean Architecture):** `OfferEntity`, `GetOffersUseCase`, `AcceptOfferUseCase`, `RejectOfferUseCase`, `CreateOffersUseCase` ve `OfferRepository` katmanları.
-* **Durum Yönetimi (OfferBloc):** *Bekleyenler*, *Cevaplananlar* ve *Süresi Dolanlar* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`) ve `AppLogger` entegrasyonu.
-* **Ağ Entegrasyonu:** `GET /api/offers`, `POST /api/offers/{id}/accept`, `POST /api/offers/{id}/reject` ve `POST /api/offers`.
+* **Temiz Mimari (Clean Architecture):** `OfferEntity`, `GetOffersUseCase`, `GetOfferDetailUseCase`, `AcceptOfferUseCase`, `RejectOfferUseCase`, `CreateOffersUseCase` ve `OfferRepository` katmanları.
+* **Durum Yönetimi (OfferBloc):** *Bekleyen (3)*, *Cevaplanan (1)* ve *Süresi Dolan (0)* filtreleri, kart bazında anlık kabul/ret işlem takibi (`processingOfferIds`), detay getirme yönetimi (`FetchOfferDetailEvent`) ve `AppLogger` entegrasyonu.
+* **Sıralama Seçenekleri (Sort Bottom Sheet):** *Önerilen*, *Ücret (En Yüksek)* ve *Kalan Süre (En Acil)* sıralama seçenekleri. Seçilen seçeneğe tekrar dokunulduğunda varsayılan sıralamaya dönen toggle mekanizması.
+* **Teklif Kartı (Figma Uyumlu):**
+  * Şirket logosu gösterimi (SVG desteği ve güvenli fallback mekanizması).
+  * Kalan süre sayacı (Son 24 saat kalan teklifler için kırmızı/turuncu aciliyet vurgusu).
+  * Teklif aksiyonları (*İlgilenmiyorum* ve *İlgileniyorum* butonları).
+  * Akıcı ve animasyonlu genişletilebilir detay alanı (`AnimatedCrossFade`) ile konum, şube, görüşme saati ve ek notların düzenli gösterimi.
+* **Ağ Entegrasyonu:** `GET /api/offers`, `GET /api/offers/{id}`, `POST /api/offers/{id}/accept`, `POST /api/offers/{id}/reject` ve `POST /api/offers`.
 
 ### 5. Merkezi Tasarım Sistemi ve Metin Yönetimi (Design Tokens & Localization Ready)
 * **AppDimensions:** Figma spellerine (390×844) birebir uyumlu merkezi padding, radius, ikon ve bileşen boyutları.
@@ -97,11 +103,12 @@ feature_name/
 
 ## Test ve Kalite Güvencesi (Testing & QA)
 
-Projede iş mantığı, durum yönetimi ve veri ayrıştırma süreçleri için kapsamlı Unit ve BLoC testleri yazılmıştır.
+Projede iş mantığı, durum yönetimi ve veri ayrıştırma süreçleri için kapsamlı Unit ve BLoC testleri yazılmıştır (36/36 test başarılı).
 
 * **Core & Network:** `ApiResponseParserTest` (API envelope ayrıştırma, hata fırlatma senaryoları).
 * **Auth Modülü:** `AuthBlocTest` (Initial state, oturum kontrolü, başarılı/başarısız giriş ve çıkış senaryoları).
 * **Candidates Modülü:** `CandidateBlocTest` ve `CandidateEntityTest` (Veri yükleme, sekme değiştirme, sıralama, çoklu seçim ve teklif gönderme senaryoları).
+* **Offers Modülü:** `OfferBlocTest` ve `OfferEntityTest` (Teklif listeleme, filtreleme, detay getirme, kabul/ret işlemleri, model serileştirme ve metadata dönüşüm senaryoları).
 
 Tüm testleri çalıştırmak için:
 ```bash

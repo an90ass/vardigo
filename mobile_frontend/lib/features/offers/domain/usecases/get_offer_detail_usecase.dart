@@ -3,12 +3,12 @@ import '../../../../core/error/failures.dart';
 import '../entities/offer_entity.dart';
 import '../repositories/offer_repository.dart';
 
-class AcceptOfferUseCase {
+class GetOfferDetailUseCase {
   final OfferRepository repository;
 
-  const AcceptOfferUseCase(this.repository);
+  const GetOfferDetailUseCase(this.repository);
 
   Future<Either<Failure, OfferEntity>> call(String offerId) async {
-    return await repository.acceptOffer(offerId);
+    return await repository.getOfferDetail(offerId);
   }
 }

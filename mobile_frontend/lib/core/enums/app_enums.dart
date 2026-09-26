@@ -1,5 +1,3 @@
-
-// API Authentication scheme types
 enum ApiAuthType {
   bearerToken,
   none,
@@ -65,6 +63,15 @@ enum OfferStatusFilter {
 
   final String value;
   const OfferStatusFilter(this.value);
+}
+
+enum OfferSortOption {
+  recommended('recommended'),
+  pay('pay'),
+  urgent('urgent');
+
+  final String value;
+  const OfferSortOption(this.value);
 }
 
 enum AppIconEnum {

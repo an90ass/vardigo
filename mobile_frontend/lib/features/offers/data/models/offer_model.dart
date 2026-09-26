@@ -15,6 +15,8 @@ class OfferModel extends Equatable {
   final OfferStatus status;
   final String expiresAt;
   final String? remain;
+  final String? city;
+  final String? note;
 
   const OfferModel({
     required this.id,
@@ -29,6 +31,8 @@ class OfferModel extends Equatable {
     required this.status,
     required this.expiresAt,
     this.remain,
+    this.city,
+    this.note,
   });
 
   factory OfferModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +49,8 @@ class OfferModel extends Equatable {
       status: OfferStatus.fromString(json['status'] as String? ?? 'pending'),
       expiresAt: json['expiresAt'] as String? ?? '',
       remain: json['remain'] as String?,
+      city: json['city'] as String?,
+      note: json['note'] as String?,
     );
   }
 
@@ -62,6 +68,8 @@ class OfferModel extends Equatable {
       'status': status.value,
       'expiresAt': expiresAt,
       if (remain != null) 'remain': remain,
+      if (city != null) 'city': city,
+      if (note != null) 'note': note,
     };
   }
 
@@ -79,6 +87,8 @@ class OfferModel extends Equatable {
       status: status,
       expiresAt: expiresAt,
       remain: remain,
+      city: city,
+      note: note,
     );
   }
 
@@ -96,5 +106,7 @@ class OfferModel extends Equatable {
         status,
         expiresAt,
         remain,
+        city,
+        note,
       ];
 }

@@ -102,13 +102,15 @@ class VardigoCheckbox extends StatelessWidget {
 
 class SortChip extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final IconData? icon;
+  final String? svgPath;
   final VoidCallback? onTap;
 
   const SortChip({
     super.key,
     required this.label,
-    this.icon = Icons.unfold_more,
+    this.icon,
+    this.svgPath,
     this.onTap,
   });
 
@@ -117,6 +119,22 @@ class SortChip extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+
+    final Widget iconWidget = svgPath != null
+        ? SvgPicture.asset(
+            svgPath!,
+            width: AppDimensions.sortChipIconSize,
+            height: AppDimensions.sortChipIconSize,
+            colorFilter: ColorFilter.mode(
+              colorScheme.primary,
+              BlendMode.srcIn,
+            ),
+          )
+        : Icon(
+            icon ?? Icons.unfold_more,
+            size: AppDimensions.sortChipIconSize,
+            color: colorScheme.primary,
+          );
 
     return GestureDetector(
       onTap: onTap,
@@ -135,18 +153,14 @@ class SortChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            iconWidget,
+            const SizedBox(width: AppDimensions.gap4),
             Text(
               label,
               style: textTheme.labelLarge?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w500,
               ),
-            ),
-            const SizedBox(width: AppDimensions.sortChipGap),
-            Icon(
-              icon,
-              size: AppDimensions.sortChipIconSize,
-              color: colorScheme.primary,
             ),
           ],
         ),

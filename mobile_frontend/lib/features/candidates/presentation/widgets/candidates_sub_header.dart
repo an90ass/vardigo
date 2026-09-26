@@ -107,7 +107,11 @@ class CandidatesSubHeader extends StatelessWidget {
           : null,
       onTap: () {
         Navigator.pop(context);
-        onSortChanged(sort);
+        if (activeSort == sort) {
+          onSortChanged(CandidateSort.recommended);
+        } else {
+          onSortChanged(sort);
+        }
       },
     );
   }

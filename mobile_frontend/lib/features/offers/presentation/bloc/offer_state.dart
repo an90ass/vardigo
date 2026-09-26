@@ -9,11 +9,6 @@ enum OfferPageStatus {
   failure,
 }
 
-
-/* I used a single immutable state  because the offers screen manages concurrent filter tabs,
-per-card asynchronous actions (accepting/rejecting an individual card while keeping the list visible),
-and live countdown timers without full screen redraws or data loss.
-*/
 class OfferState extends Equatable {
   final OfferPageStatus status;
   final List<OfferEntity> offers;

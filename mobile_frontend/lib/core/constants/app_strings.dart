@@ -54,10 +54,28 @@ abstract final class AppStrings {
 
   // Screen 2: Görüşme Talepleri (Offers)
   static const String interviewOffersTitle = 'Görüşme Talepleri';
-  static String requestsWaiting(int count) => '$count talep sizi bekliyor';
-  static const String incomingTab = 'Gelen Talepler';
-  static const String historyTab = 'Geçmiş';
+  static String pendingOffersSubtitle(int count) => '$count talep yanıt bekliyor';
+  static const String answeredOffersSubtitle = 'Cevaplanan talepler';
+  static const String expiredOffersSubtitle = 'Süresi dolan talepler';
+
+  static const String tabPending = 'Bekleyen';
+  static const String tabAnswered = 'Cevaplanan';
+  static const String tabExpired = 'Süresi Dolan';
+
+  static const String emptyPendingOffers = 'Bekleyen talep yok';
+  static const String emptyAnsweredOffers = 'Kabul veya red ettiğin talepler burada listelenir';
+  static const String emptyExpiredOffers = 'Süresi dolan talep yok';
+
   static const String viewDetails = 'Detayları Gör';
+  static const String hideDetails = 'Detayları Gizle';
   static const String interestedButton = 'İlgileniyorum';
   static const String notInterestedButton = 'İlgilenmiyorum';
+  static const String acceptedBadge = 'Kabul Edildi';
+  static const String rejectedBadge = 'Reddedildi';
+  static const String expiredBadge = 'Süresi Doldu';
+
+  static String offerRemainingPrefix = 'Teklifin sonlanmasına ';
+  static String offerRemainingSuffix = ' kaldı.';
+  static const String offerAcceptSuccess = 'Tebrikler! Görüşme teklifini kabul ettiniz.';
+  static const String offerRejectSuccess = 'Görüşme teklifi reddedildi.';
 }

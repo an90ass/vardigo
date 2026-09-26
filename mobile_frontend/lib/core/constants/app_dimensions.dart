@@ -97,6 +97,40 @@ abstract final class AppDimensions {
   static const double errorIconSize = 48.0;
   static const double errorSpacingVertical = 12.0;
   static const double errorButtonSpacing = 16.0;
+  static const double gap2 = 2.0;
+  static const double gap4 = 4.0;
+  static const double gap6 = 6.0;
+  static const double gap8 = 8.0;
+  static const double gap10 = 10.0;
+  static const double gap12 = 12.0;
+  static const double gap14 = 14.0;
+  static const double gap16 = 16.0;
+  static const double gap20 = 20.0;
+  static const double gap24 = 24.0;
+  static const double gap40 = 40.0;
+
+  static const double radius6 = 6.0;
+  static const double radius8 = 8.0;
+  static const double radius10 = 10.0;
+  static const double radius12 = 12.0;
+  static const double radius16 = 16.0;
+  static const double radius20 = 20.0;
+  static const double radius24 = 24.0;
+  static const double radius26 = 26.0;
+  static const double radius28 = 28.0;
+  static const double radius54 = 54.0;
+
+  static const double iconSize12 = 12.0;
+  static const double iconSize14 = 14.0;
+  static const double iconSize16 = 16.0;
+  static const double iconSize20 = 20.0;
+  static const double iconSize24 = 24.0;
+  static const double iconSize32 = 32.0;
+
+  static const double cardPadding = 16.0;
+  static const double controlButtonSize = 44.0;
+  static const double buttonHeight36 = 36.0;
+
   static const double bottomSheetHandleWidth = 40.0;
   static const double bottomSheetHandleHeight = 4.0;
   static const double bottomSheetHandleMargin = 16.0;
