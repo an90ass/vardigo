@@ -163,8 +163,8 @@ class _OfferCardState extends State<OfferCard> {
                   const SizedBox(width: AppDimensions.gap12),
                   SvgPicture.asset(
                     AppIconEnum.date.svgPath,
-                    width: AppDimensions.iconSize16,
-                    height: AppDimensions.iconSize16,
+                    width: AppDimensions.iconSize14,
+                    height: AppDimensions.iconSize14,
                     colorFilter: const ColorFilter.mode(
                       AppColors.primary,
                       BlendMode.srcIn,
@@ -467,30 +467,6 @@ class _OfferCardState extends State<OfferCard> {
                   style: textTheme.bodySmall?.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.gap6),
-          Row(
-            children: [
-              SvgPicture.asset(
-                AppIconEnum.date.svgPath,
-                width: AppDimensions.iconSize16,
-                height: AppDimensions.iconSize16,
-                colorFilter: const ColorFilter.mode(
-                  AppColors.gray500,
-                  BlendMode.srcIn,
-                ),
-              ),
-              const SizedBox(width: AppDimensions.gap6),
-              Expanded(
-                child: Text(
-                  'Görüşme Zamanı: ${widget.offer.when}',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: AppColors.sub,
                     fontSize: 12,
                   ),
                 ),
