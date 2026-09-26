@@ -17,6 +17,8 @@ Proje, **Feature-Based Clean Architecture** prensiplerine uygun olarak geliştir
 * **Tasarım & Responsive:** `flutter_screenutil` (390×844 Figma token'ları, özel tema ve `Urbanist` tipografisi).
 * **Log Sistemi:** `logger` tabanlı merkezi `AppLogger`.
 
+> **Not (JSON Serileştirme):** Projede model sayısı yalın ve kontrollü olduğu için kod üretim araçları (`build_runner` / `json_serializable`) yerine manuel serileştirme (`fromJson` / `toJson` / `toEntity`) tercih edilmiştir. Bu sayede ekstra `.g.dart` kod karmaşası önlenmiş, tip dönüşümleri ve fallback mekanizmaları daha şeffaf tutulmuştur. İhtiyaç halinde `json_serializable` kolayca entegre edilebilir.
+
 ---
 
 ## Klasör Yapısı
@@ -73,6 +75,13 @@ feature_name/
 ### 2. Ağ ve Log Altyapısı
 * **DioClient:** Tüm isteklerde güvenli depolamadan alınan Bearer Token kullanımı.
 * **AppLogger:** Ağ istekleri, yanıtlar ve oturum geçişlerini sade ve anlaşılır şekilde konsolda gösteren log altyapısı.
+
+### 3. Eşleşen Personeller Ekranı (Screen 1 - İşveren Görünümü)
+* **Temiz Mimari (Clean Architecture):** `CandidateEntity`, `GetCandidatesUseCase` ve `CandidateRepository` katmanları.
+* **Segmented Tabs:** *Tam Eşleşen (26)* ve *Benzer Adaylar (16)* arasında dinamik geçiş ve API filtreleme.
+* **Sıralama (Sort Filter):** *Önerilen*, *En Yakın* ve *Puanı En Yüksek* seçenekleri ile anlık liste güncelleme.
+* **Aday Kartı (Figma Uyumlu):** 56×56 avatar, online durum noktası, eşleşme yüzdesi rozeti (`%92`), puan, katılım oranı ve mesafe bilgileri.
+* **Çoklu Seçim:** Checkbox ile aday seçimi ve yapışkan alt çubuktan (*Sticky Bottom Bar*) aday seçim kontrolü.
 
 ---
 

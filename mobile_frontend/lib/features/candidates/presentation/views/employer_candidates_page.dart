@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Screen 1: Eşleşen Personeller (Employer View)
+// TODO[ANAS]: UI design
 class EmployerCandidatesPage extends StatelessWidget {
   const EmployerCandidatesPage({super.key});
 

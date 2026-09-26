@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/views/login_page.dart';
+import '../../features/candidates/presentation/bloc/candidate_bloc.dart';
 import '../../features/candidates/presentation/views/employer_candidates_page.dart';
 import '../../features/offers/presentation/views/worker_offers_page.dart';
 import '../constants/route_names.dart';
 import '../di/injection.dart';
 
 export '../constants/route_names.dart' show RouteNames;
-
 
 abstract final class AppRoutes {
   static const String initial = RouteNames.login;
@@ -28,7 +28,10 @@ abstract final class AppRoutes {
       case RouteNames.employerCandidates:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const EmployerCandidatesPage(),
+          builder: (_) => BlocProvider<CandidateBloc>(
+            create: (_) => getIt<CandidateBloc>()..add(const FetchCandidates()),
+            child: const EmployerCandidatesPage(),
+          ),
         );
 
       case RouteNames.workerOffers:
