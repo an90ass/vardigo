@@ -1,43 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../constants/app_dimensions.dart';
+import '../enums/app_enums.dart';
+import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 
-
 class SquareControlButton extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final String? svgPath;
   final VoidCallback? onTap;
 
   const SquareControlButton({
     super.key,
-    required this.icon,
+    this.icon,
+    this.svgPath,
     this.onTap,
-  });
+  }) : assert(icon != null || svgPath != null, 'Either icon or svgPath must be provided');
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    final Widget iconWidget = svgPath != null
+        ? SvgPicture.asset(
+            svgPath!,
+            width: AppDimensions.squareButtonIconSize,
+            height: AppDimensions.squareButtonIconSize,
+            colorFilter: ColorFilter.mode(
+              colorScheme.onSurfaceVariant,
+              BlendMode.srcIn,
+            ),
+          )
+        : Icon(
+            icon,
+            size: AppDimensions.squareButtonIconSize,
+            color: colorScheme.onSurfaceVariant,
+          );
+
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: AppDimensions.squareButtonSize,
         height: AppDimensions.squareButtonSize,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppDimensions.controlRadius),
+          borderRadius: BorderRadius.circular(AppDimensions.squareButtonRadius),
           border: Border.all(color: colorScheme.outline, width: 1.0),
           boxShadow: AppShadows.squareButton,
         ),
-        child: Icon(
-          icon,
-          size: AppDimensions.squareButtonIconSize,
-          color: colorScheme.onSurfaceVariant, // #525866
-        ),
+        child: iconWidget,
       ),
     );
   }
 }
-
 
 class VardigoCheckbox extends StatelessWidget {
   final bool isChecked;
@@ -58,26 +75,30 @@ class VardigoCheckbox extends StatelessWidget {
       child: Container(
         width: AppDimensions.checkboxSize,
         height: AppDimensions.checkboxSize,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isChecked ? colorScheme.primary : colorScheme.surface,
           borderRadius: BorderRadius.circular(AppDimensions.checkboxRadius),
           border: Border.all(
-            color: isChecked ? colorScheme.primary : colorScheme.outlineVariant, // #CACFD8
+            color: isChecked ? colorScheme.primary : AppColors.slate300,
             width: 1.0,
           ),
         ),
         child: isChecked
-            ? Icon(
-                Icons.check,
-                size: 14,
-                color: colorScheme.onPrimary,
+            ? SvgPicture.asset(
+                AppIconEnum.check.svgPath,
+                width: AppDimensions.checkboxIconSize,
+                height: AppDimensions.checkboxIconSize,
+                colorFilter: ColorFilter.mode(
+                  colorScheme.onPrimary,
+                  BlendMode.srcIn,
+                ),
               )
             : null,
       ),
     );
   }
 }
-
 
 class SortChip extends StatelessWidget {
   final String label;
@@ -107,7 +128,7 @@ class SortChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppDimensions.controlRadius),
+          borderRadius: BorderRadius.circular(AppDimensions.sortChipRadius),
           border: Border.all(color: colorScheme.outline, width: 1.0),
           boxShadow: AppShadows.sortChip,
         ),

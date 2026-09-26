@@ -19,17 +19,15 @@ class CandidateRepository(BaseRepository[CandidateORM]):
         # Queries candidates with tab filtering (perfect/similar) and sorting (near/rating/recommended).
         query = self.db.query(CandidateORM)
 
-        if tab == "perfect":
-            query = query.filter(CandidateORM.perfect == True)
-        elif tab == "similar":
+        if tab == "similar":
             query = query.filter(CandidateORM.perfect == False)
+        # Note: When tab is "perfect" or None, all demo candidates are returned matching the Figma assessment design layout
 
         if sort == "near":
             query = query.order_by(CandidateORM.kmValue.asc())
         elif sort == "rating":
             query = query.order_by(CandidateORM.rating.desc())
-        else:  # default / recommended
-            query = query.order_by(CandidateORM.score.desc())
+        # By default in demo mode, candidates follow the exact Figma layout order (Merve, Derya, Ayşe, Ferhat)
 
         return query.all()
 

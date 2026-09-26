@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import '../enums/app_enums.dart';
 import '../storage/token_storage.dart';
 import '../utils/app_logger.dart';
 import 'api_exception.dart';

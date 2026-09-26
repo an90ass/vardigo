@@ -66,3 +66,25 @@ enum OfferStatusFilter {
   final String value;
   const OfferStatusFilter(this.value);
 }
+
+enum AppIconEnum {
+  alarm('alarm'),
+  back('back'),
+  check('check'),
+  close('close'),
+  date('date'),
+  eye('eye'),
+  help('help'),
+  levels('levels'),
+  money('money'),
+  online('online'),
+  pin('pin'),
+  send('send'),
+  shield('shield'),
+  sort('sort'),
+  star('star');
+
+  final String value;
+  const AppIconEnum(this.value);
+  String get svgPath => 'assets/icons/$value.svg';
+}

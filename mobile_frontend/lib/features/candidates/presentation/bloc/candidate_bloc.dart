@@ -44,12 +44,16 @@ class CandidateBloc extends Bloc<CandidateEvent, CandidateState> {
       },
       (data) {
         AppLogger.i('[CandidateBloc] Loaded ${data.candidates.length} candidates (Perfect: ${data.totalPerfect}, Similar: ${data.totalSimilar})');
+        final initialSelection = state.selectedCandidateIds.isEmpty && data.candidates.isNotEmpty
+            ? {data.candidates.first.id}
+            : state.selectedCandidateIds;
         emit(state.copyWith(
           status: CandidateStatus.success,
           candidates: data.candidates,
           totalPerfect: data.totalPerfect,
           totalSimilar: data.totalSimilar,
           selectedHint: data.selectedHint,
+          selectedCandidateIds: initialSelection,
         ));
       },
     );
