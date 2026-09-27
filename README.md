@@ -208,6 +208,7 @@ Proje, **Feature-Based Clean Architecture** prensiplerine göre inşa edilmişti
 
 #### 1. Sayfa 1 — Eşleşen Personeller (İşveren Görünümü — `/candidates`)
 * **Segmented Tabs:** *%100 Eşleşme* ve *Benzer Personeller* sekmeleri arasında backend filtrelemesi (`tab=perfect` / `tab=similar`).
+* **Tasarım & Sayaç Bütünlüğü (26 / 16):** Sekmelerdeki `(26)` ve `(16)` ile üst başlıktaki sayaçlar, Figma tasarımındaki toplam havuz meta verisini (`totalPerfect`, `totalSimilar`) temsil eder. İnceleme sürecini yormamak adına onlarca yapay kopya profil üretmek yerine, Figma'daki gerçek adaylar tohumlanmış ve toplam sayaçlar backend API meta yanıtından dinamik beslenmiştir.
 * **Sıralama Filtreleri:** *Önerilen*, *En Yakın* ve *Puana Göre* filtreleri; aynı filtreye tekrar tıklandığında varsayılana dönen *Toggle-to-Reset* mekanizması.
 * **Aday Kartı:** 56×56 avatar, online durum göstergesi, puan, katılım oranı, unvan ve mesafe bilgileri.
 * **Çoklu Seçim & Sticky Bottom Bar:** Checkbox ile birden fazla aday seçebilme, seçilen kişi sayısını gösteren yapışkan alt bar ve toplu *Görüşme Talebi Gönder* aksiyonu.
