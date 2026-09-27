@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/app_enums.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shadows.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/custom_controls.dart';
@@ -182,6 +183,8 @@ class CandidateCard extends StatelessWidget {
           text: candidate.rating,
         ),
         const SizedBox(width: AppDimensions.metaRowSectionGap),
+        _buildVerticalDivider(context),
+        const SizedBox(width: AppDimensions.metaRowSectionGap),
         _buildMetaItem(
           context: context,
           svgPath: AppIconEnum.shield.svgPath,
@@ -227,7 +230,12 @@ class CandidateCard extends StatelessWidget {
         const SizedBox(width: AppDimensions.metaRowItemGap),
         Text(
           text,
-          style: textTheme.bodySmall,
+          style: textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 12,
+            height: 16 / 12,
+            color: AppColors.slate700,
+          ),
         ),
       ],
     );
@@ -237,18 +245,17 @@ class CandidateCard extends StatelessWidget {
     return Container(
       width: AppDimensions.verticalDividerWidth,
       height: AppDimensions.verticalDividerHeight,
-      color: context.colorScheme.outline,
+      color: context.colorScheme.outlineVariant,
     );
   }
 
   Widget _buildSalaryBanner(BuildContext context) {
-    final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final customColors = context.customColors;
 
     final bool salaryMatches = _salaryMatches;
     final Color salaryColor = salaryMatches ? customColors.green : customColors.warning;
-    final Color salaryBg = isSelected ? colorScheme.surface : customColors.salaryBarBg;
+    final Color salaryBg = customColors.salaryBarBg;
     final String salaryText = salaryMatches ? AppStrings.salaryMatches : AppStrings.salaryNoMatch;
 
     return Container(
@@ -286,7 +293,7 @@ class CandidateCard extends StatelessWidget {
             AppStrings.defaultSalary,
             style: textTheme.bodySmall?.copyWith(
               color: salaryColor,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
