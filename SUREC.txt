@@ -7,7 +7,6 @@ VARDIGO CASE STUDY — SUREC NOTU
 - Mobil: Flutter 3.44.4 (Dart 3.12.2), flutter_bloc (State Management), dartz (Functional Error Handling), get_it (DI), dio (Ağ katmanı), flutter_screenutil (390×844 Figma Responsive).
 - Backend: Python 3.11 (FastAPI, MVC Mimarisi, SQLite + SQLAlchemy ORM, Docker & Compose), Pydantic v2, Uvicorn.
 - Yapay Zeka & Asistanlar: Google Antigravity (Gemini 2.5 Pro ve Claude); test dosyalarinin yazilmasi, sabit veri/sablon dosyalarinin olusturulmasi, README ve dokumantasyon dosyalarinin hazirlanmasi, kod inceleme (code review) ve gelistirme surecini hizlandirmak adina pair-programming asistanlari olarak kullanildi.
-- Tasarım Araçları: Canva (Adaptive icon ve Splash safe-zone boyutlandırma).
 
 2. GELISME SIRASI VE ADIMLAR
 ------------------------------------------------------------
@@ -26,9 +25,9 @@ VARDIGO CASE STUDY — SUREC NOTU
 
 3. KARSILASILAN ZORLUKLAR VE COZUMLER
 ------------------------------------------------------------
-- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme (960×960 Standartlari):
+- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme:
   Sorun: Android 12+ sisteminin zorunlu kildigi 160dp dairesel maskeleme sebebiyle standart logolarin kenarlari kirpiliyor ve goruntu bozuluyordu.
-  Cozum: Resmi Android 12 Splash standartlarina gore (arkaplanli ikonlar icin 960×960 px canvas uzerinde 640 px dairesel guvenli alan / arka plansiz icin 1152×1152 px uzerinde 768 px guvenli alan) Canva ile vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile piksel kusursuzlugunda cozuldu.
+  Cozum: Resmi Android Splash standartlarina uygun safe-zone hizalamasiyla vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile piksel kusursuzlugunda cozuldu.
 
 - Cift Tiklama (Double-Tap) & Idempotency:
   Sorun: Yavas agda kullanicinin butona art arda hizli basmasi sonucu mukerrer istek riski.
@@ -38,14 +37,10 @@ VARDIGO CASE STUDY — SUREC NOTU
   Onem & Risk: Bloklayici bir hata olarak karsilasilmasa da, cihaz yerel saati ile sunucu saati farkindan dogabilecek hatali veya negatif sure riskini onlemek kritikti.
   Cozum: Backend'de tum zaman damgalari ISO-8601 UTC olarak standartlastirildi; mobilde TimeUtils katmani ile DateTime.now().toUtc() karsilastirmasi yapilarak acil durumlarda (24 saatin alti) renk degistiren dinamik ve dogru bir geri sayim mimari seviyede saglandi.
 
-- Siralama (Sort) Toggle-to-Reset Davranisi:
-  Sorun: Secili filtreye tekrar dokunuldugunda varsayilan siralamaya donme ihtiyaci.
-  Cozum: Tiklanan filtre zaten aktifse varsayilana resetleyen cift yonlu toggle state mantigi uygulandi.
-
 4. BILEREK YAPILMAYANLAR / TERCIHLER
 ------------------------------------------------------------
 - build_runner / json_serializable: Kod kalabaligini onlemek ve tam tip guvenligi saglamak adina temiz manuel serilestirme tercih edildi.
 - .env Dosyasi Guvenligi: Test surecinin sifir eforla (Zero-Setup) aninda calisabilmesi adina .env dosyasi repoda acik birakildi; su asama icin production seviyesi env gizleme ile vakit harcanmadi.
 - Harici Redis Bagimliligi: Projenin 'Zero-Config' (ekstra sunucu/hizmet gerektirmeden tek komutla calisma) hedefine sadik kalmak icin Redis yerine SQLite atomik kontrolleri ve BLoC UI kilidi tercih edildi.
-- Kod Ici Yorum Satirlari: Kodun kendini aciklamasi (Clean Code) ilkesi geregi dart dosyalarinda gereksiz yorumlardan kacinildi.
-- Fazladan Auth Ekrani: Case akisina sadik kalinarak tek dokunusla rol degistiren sade mock auth tercih edildi.
+- Agresif onResume Yenilemesi: Görüşme tekliflerinin 24 saatlik geçerlilik ve geri sayım süresi, backend'in ISO-8601 UTC standardı ve mobildeki TimeUtils sayesinde cihazda zaten anlık ve senkron hesaplanmaktadır. Olası harici durum değişiklikleri (işverenin iptali vb.) ise kontrolsüz onResume API yükü yerine, sektör standardı olan kullanıcı kontrollü Pull-to-Refresh, backend 409 (Conflict) doğrulama katmanı ve production seviyesinde Push Notification mimarisiyle yönetilmelidir.
+- Git ve Branch Stratejisi: Projede ana aşamalar için Pull Request ve feature-branch pratikleri uygulanmış; ancak 2 ekranlık bir vaka çalışmasında süreci onlarca mikro-branch ve commit kalabalığıyla suni şekilde şişirmek (over-engineering) yerine, tarafınızca rahatça incelenebilecek temiz, amaca yönelik ve dengeli bir Git akışı tercih edilmiştir.

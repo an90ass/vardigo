@@ -10,13 +10,14 @@ abstract final class AppStrings {
 */
 
   // Global / Common
-  static const String appName = 'Vardigo';
+  static const String appName = 'VardiGo';
   static const String retry = 'Tekrar Dene';
   static const String generalError = 'Bir hata oluştu.';
   static const String pageNotFound = 'Sayfa bulunamadı';
 
   // Auth / Login
-  static const String loginTitle = 'Vardigo';
+  static const String loginTitle = 'VardiGo';
+  static const String loginTitleSubtitle = 'İş Teklifi Al. Personel Bul.';
   static const String loginSubtitle = 'Devam etmek için profilinizi seçin';
   static const String employerLoginTitle = 'İşveren Girişi';
   static const String employerLoginSubtitle = 'Zarif Cheff Restoran';
@@ -26,6 +27,7 @@ abstract final class AppStrings {
   static const String loggingIn = 'Giriş yapılıyor, lütfen bekleyin...';
   static const String sessionVerifying = 'Kayıtlı oturumunuz doğrulanıyor';
   static const String profilePreparing = 'Profiliniz ve oturumunuz hazırlanıyor';
+  static const String appCopyright = 'Vardigo © 2026';
 
   // Screen 1: Eşleşen Personeller (Candidates)
   static const String matchingCandidatesTitle = 'Eşleşen Personeller';
