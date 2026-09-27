@@ -178,7 +178,7 @@ class CandidateCard extends StatelessWidget {
         _buildMetaItem(
           context: context,
           svgPath: AppIconEnum.star.svgPath,
-          iconColor: customColors.warning,
+          iconColor: customColors.star,
           iconSize: AppDimensions.metaStarIconSize,
           text: candidate.rating,
         ),

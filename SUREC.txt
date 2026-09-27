@@ -25,10 +25,6 @@ VARDIGO CASE STUDY — SUREC NOTU
 
 3. KARSILASILAN ZORLUKLAR VE COZUMLER
 ------------------------------------------------------------
-- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme:
-  Sorun: Android 12+ sisteminin zorunlu kildigi 160dp dairesel maskeleme sebebiyle standart logolarin kenarlari kirpiliyor ve goruntu bozuluyordu.
-  Cozum: Resmi Android Splash standartlarina uygun safe-zone hizalamasiyla vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile piksel kusursuzlugunda cozuldu.
-
 - Cift Tiklama (Double-Tap) & Idempotency:
   Sorun: Yavas agda kullanicinin butona art arda hizli basmasi sonucu mukerrer istek riski.
   Cozum: Mobilde BLoC 'isProcessing' kilidiyle buton devre disi birakildi (Opacity 0.5); backend'de atomik 'OFFER_CONFLICT' (409) kontrolu ile cift katmanli koruma saglandi.
@@ -36,6 +32,10 @@ VARDIGO CASE STUDY — SUREC NOTU
 - Zaman Dilimi Farkliligi (Timezone Drift) & Geri Sayim Senkronizasyonu (Proaktif Onlem):
   Onem & Risk: Bloklayici bir hata olarak karsilasilmasa da, cihaz yerel saati ile sunucu saati farkindan dogabilecek hatali veya negatif sure riskini onlemek kritikti.
   Cozum: Backend'de tum zaman damgalari ISO-8601 UTC olarak standartlastirildi; mobilde TimeUtils katmani ile DateTime.now().toUtc() karsilastirmasi yapilarak acil durumlarda (24 saatin alti) renk degistiren dinamik ve dogru bir geri sayim mimari seviyede saglandi.
+
+- Android 12+ ve 14+ Splash / Adaptive Icon Maskeleme:
+  Sorun: Android 12+ sisteminin zorunlu kildigi 160dp dairesel maskeleme sebebiyle standart logolarin kenarlari kirpiliyor ve goruntu bozuluyordu.
+  Cozum: Resmi Android Splash standartlarina uygun safe-zone hizalamasiyla vardigo_adaptive_fg.png uretildi ve flutter_native_splash ile piksel kusursuzlugunda cozuldu.
 
 4. BILEREK YAPILMAYANLAR / TERCIHLER
 ------------------------------------------------------------
@@ -48,5 +48,6 @@ VARDIGO CASE STUDY — SUREC NOTU
 - Harici Redis Bagimliligi: Projenin 'Zero-Config' (ekstra sunucu/hizmet gerektirmeden tek komutla calisma) hedefine sadik kalmak icin Redis yerine SQLite atomik kontrolleri ve BLoC UI kilidi tercih edildi.
 - Agresif onResume Yenilemesi: Görüşme tekliflerinin 24 saatlik geçerlilik ve geri sayım süresi, backend'in ISO-8601 UTC standardı ve mobildeki TimeUtils sayesinde cihazda zaten anlık ve senkron hesaplanmaktadır. Olası harici durum değişiklikleri (işverenin iptali vb.) ise kontrolsüz onResume API yükü yerine, sektör standardı olan kullanıcı kontrollü Pull-to-Refresh, backend 409 (Conflict) doğrulama katmanı ve production seviyesinde Push Notification mimarisiyle yönetilmelidir.
 - Git ve Branch Stratejisi: Projede ana aşamalar için Pull Request ve feature-branch pratikleri uygulanmış; ancak 2 ekranlık bir vaka çalışmasında süreci onlarca mikro-branch ve commit kalabalığıyla suni şekilde şişirmek (over-engineering) yerine, tarafınızca rahatça incelenebilecek temiz, amaca yönelik ve dengeli bir Git akışı tercih edilmiştir.
-- Codemagic (iOS Dogrulamasi) & CI/CD:
-  Uygulamanin iOS platformunda sorunsuz derlenip calistigini garanti etmek adina Codemagic Mac M2 bulut derleyicisi ve Appetize.io canli testi dogrulanmistir. 
+- Dark Mode Tercihi: Figma tasarım kapsamına (%100 piksel kusursuzluğu) sadık kalmak adına Dark Mode bu aşamada aktif edilmemiştir. Ancak merkezi AppTheme mimarisi tamamen hazır ve modüler yapılandırıldığı için istenildiği anda tek bir Cubit/Provider ile zahmetsizce entegre edilebilir durumdadır.
+- Aday Kartında Teklif Durum Rozeti : Figma referans tasarımını (%100 piksel kusursuzluğu) tasarım dışı öğelerle bozmamak adına kart üzerine 'yanıt bekleniyor / kabul etti' gibi harici etiketler eklenmemiştir. Mükerrer teklif kontrolü mimari seviyede tutularak backend'de atomik 409 (Conflict) doğrulaması ve mobilde Floating SnackBar ile yönetilmiştir.
+ 
