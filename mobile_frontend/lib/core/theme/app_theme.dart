@@ -148,7 +148,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     slate600: AppColors.slate600,
     slate700: AppColors.slate700,
     selectedCardBg: Color(0xFFEBF1FF),
-    salaryBarBg: Color(0xFFF7F7F7),
+    salaryBarBg: AppColors.slate50,
   );
 
   @override

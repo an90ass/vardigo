@@ -91,6 +91,8 @@ Uygulama, Figma referans tasarımlarına (390×844) ve vaka kurallarına tam uyu
 | **Aday Kartı Tasarımı** | 56×56 avatar, online durum göstergesi, eşleşme yüzdesi rozeti (`%92`), aday puanı, katılım oranı, unvan ve mesafe bilgileri. |
 | **Çoklu Seçim & Bottom Bar** | Checkbox ile birden fazla aday seçebilme, seçilen aday sayısını gösteren yapışkan alt çubuk (*Sticky Bottom Bar*) ve toplu "Görüşme Talebi Gönder" aksiyonu. |
 
+> **Sayaç Bütünlüğü (26 / 16):** Sekmelerdeki `(26)` ve `(16)` sayıları, Figma tasarımındaki toplam havuz meta verisini (`totalPerfect`, `totalSimilar`) temsil eder. İncelemeyi yormamak adına onlarca kopya aday yerine Figma'daki profiller sunulmuş; sayaçlar API meta yanıtından dinamik beslenmiştir.
+
 ---
 
 ### 2. Sayfa 2 — Görüşme Talepleri (İş Arayan Görünümü)

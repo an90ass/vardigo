@@ -225,30 +225,38 @@ class EmployerCandidatesPage extends StatelessWidget {
   }
 
   Widget _buildCandidateList(BuildContext context, CandidateState state) {
-    return ListView.builder(
-      key: ValueKey(state.activeTab),
-      padding: const EdgeInsets.fromLTRB(
-        AppDimensions.pageHorizontalPadding,
-        0.0,
-        AppDimensions.pageHorizontalPadding,
-        AppDimensions.listBottomPadding,
-      ),
-      itemCount: state.candidates.length,
-      itemBuilder: (context, index) {
-        final candidate = state.candidates[index];
-        final bool isSelected = state.isCandidateSelected(candidate.id);
-
-        return CandidateCard(
-          key: ValueKey(candidate.id),
-          candidate: candidate,
-          isSelected: isSelected,
-          onToggleSelect: () {
-            context
-                .read<CandidateBloc>()
-                .add(ToggleCandidateSelection(candidate.id));
-          },
-        );
+    return RefreshIndicator(
+      color: context.colorScheme.primary,
+      backgroundColor: context.colorScheme.surface,
+      onRefresh: () async {
+        context.read<CandidateBloc>().add(const FetchCandidates());
       },
+      child: ListView.builder(
+        key: ValueKey(state.activeTab),
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(
+          AppDimensions.pageHorizontalPadding,
+          0.0,
+          AppDimensions.pageHorizontalPadding,
+          AppDimensions.listBottomPadding,
+        ),
+        itemCount: state.candidates.length,
+        itemBuilder: (context, index) {
+          final candidate = state.candidates[index];
+          final bool isSelected = state.isCandidateSelected(candidate.id);
+
+          return CandidateCard(
+            key: ValueKey(candidate.id),
+            candidate: candidate,
+            isSelected: isSelected,
+            onToggleSelect: () {
+              context
+                  .read<CandidateBloc>()
+                  .add(ToggleCandidateSelection(candidate.id));
+            },
+          );
+        },
+      ),
     );
   }
 }
