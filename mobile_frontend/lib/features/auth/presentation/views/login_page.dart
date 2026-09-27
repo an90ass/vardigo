@@ -87,7 +87,7 @@ class _LoginFooter extends StatelessWidget {
     final textTheme = context.textTheme;
 
     return Text(
-      AppStrings.developerCredit,
+      AppStrings.appCopyright,
       style: textTheme.bodySmall?.copyWith(
         color: customColors.slate500,
         fontWeight: FontWeight.w600,

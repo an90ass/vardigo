@@ -27,7 +27,7 @@ abstract final class AppStrings {
   static const String loggingIn = 'Giriş yapılıyor, lütfen bekleyin...';
   static const String sessionVerifying = 'Kayıtlı oturumunuz doğrulanıyor';
   static const String profilePreparing = 'Profiliniz ve oturumunuz hazırlanıyor';
-  static const String developerCredit = 'Developed by Anas';
+  static const String appCopyright = 'Vardigo © 2026';
 
   // Screen 1: Eşleşen Personeller (Candidates)
   static const String matchingCandidatesTitle = 'Eşleşen Personeller';
