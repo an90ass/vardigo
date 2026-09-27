@@ -1,0 +1,38 @@
+workflows:
+  ios-simulator-workflow:
+    name: VardiGO iOS Simulator Build & Test
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd mobile_frontend
+          flutter pub get
+      - name: Run Flutter Analyzer & Tests
+        script: |
+          cd mobile_frontend
+          flutter test
+      - name: Build iOS Simulator App
+        script: |
+          cd mobile_frontend
+          flutter build ios --simulator --no-codesign
+          cd build/ios/iphonesimulator
+          zip -r -X VardiGO_iOS_Simulator.zip Runner.app
+      - name: Build Android Debug APK
+        script: |
+          cd mobile_frontend
+          flutter build apk --debug
+    artifacts:
+      - mobile_frontend/build/ios/iphonesimulator/VardiGO_iOS_Simulator.zip
+      - mobile_frontend/build/app/outputs/flutter-apk/app-debug.apk
+    publishing:
+      email:
+        recipients:
+          - anas.eskander.dev@gmail.com
+        notify:
+          success: true
+          failure: true
