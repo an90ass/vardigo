@@ -20,8 +20,8 @@ VARDIGO CASE STUDY — SUREC NOTU
    Aday ve Auth modullerinin birim ve BLoC testleri yazildi → CI/CD dogrulamasi yapildi ve test altyapisi saglamlastirildi.
 5. Teklif Modulu & Entegrasyon (Sayfa 2):
    Gorusme Talepleri modulu (3 durum sekmesi, AnimatedCrossFade detay, dinamik geri sayim, kabul/ret aksiyonlari ve 409 cakisma yonetimi) backend ile entegre edildi.
-6. Docker, Son Cilalama & Teslimat:
-   Tum testler (36/36 passed, 0 flutter analyze issue) kosuldu → Dockerfile & docker-compose ile backend konteynerize edildi → PhoneFrame (390×844 Bezel + Dynamic Island), adaptive icon ve native splash ile teslimata hazirlandi.
+6. Docker, iOS Bulut Dogrulamasi & Teslimat:
+   Tum testler (36/36 passed, 0 flutter analyze issue) kosuldu → Dockerfile & docker-compose ile backend konteynerize edildi → Codemagic Mac M2 ile iOS derleme ve calisma dogrulamasi yapildi, adaptive icon ve native splash ile teslimata hazirlandi.
 
 3. KARSILASILAN ZORLUKLAR VE COZUMLER
 ------------------------------------------------------------
@@ -39,8 +39,14 @@ VARDIGO CASE STUDY — SUREC NOTU
 
 4. BILEREK YAPILMAYANLAR / TERCIHLER
 ------------------------------------------------------------
+- Neden BLoC Durum Yönetimi?:
+  Sadece 'race condition' ve idempotency önlemi değil; projenin kurumsal ölçeklenebilirliği (Enterprise Scalability), büyük ekiplerde kod sürdürülebilirliği ve iş kurallarını UI yaşam döngüsünden tamamen bağımsız (decoupled) tutarak saf Dart testleriyle (36/36 passed) doğrulayabilme kabiliyeti nedeniyle BLoC tercih edilmiştir.
+- Neden Dio Ağ İstemcisi?:
+  Standart 'http' paketine kıyasla; merkezi Interceptor mimarisi (otomatik Bearer token enjeksiyonu ve loglama), ağ dalgalanmalarında otomatik yeniden deneme (Retry), merkezi bağlantı zaman aşımı (Timeout) ve tip güvenli hata ayrıştırması (DioException) sunduğu için tercih edilmiştir.
 - build_runner / json_serializable: Kod kalabaligini onlemek ve tam tip guvenligi saglamak adina temiz manuel serilestirme tercih edildi.
 - .env Dosyasi Guvenligi: Test surecinin sifir eforla (Zero-Setup) aninda calisabilmesi adina .env dosyasi repoda acik birakildi; su asama icin production seviyesi env gizleme ile vakit harcanmadi.
 - Harici Redis Bagimliligi: Projenin 'Zero-Config' (ekstra sunucu/hizmet gerektirmeden tek komutla calisma) hedefine sadik kalmak icin Redis yerine SQLite atomik kontrolleri ve BLoC UI kilidi tercih edildi.
 - Agresif onResume Yenilemesi: Görüşme tekliflerinin 24 saatlik geçerlilik ve geri sayım süresi, backend'in ISO-8601 UTC standardı ve mobildeki TimeUtils sayesinde cihazda zaten anlık ve senkron hesaplanmaktadır. Olası harici durum değişiklikleri (işverenin iptali vb.) ise kontrolsüz onResume API yükü yerine, sektör standardı olan kullanıcı kontrollü Pull-to-Refresh, backend 409 (Conflict) doğrulama katmanı ve production seviyesinde Push Notification mimarisiyle yönetilmelidir.
 - Git ve Branch Stratejisi: Projede ana aşamalar için Pull Request ve feature-branch pratikleri uygulanmış; ancak 2 ekranlık bir vaka çalışmasında süreci onlarca mikro-branch ve commit kalabalığıyla suni şekilde şişirmek (over-engineering) yerine, tarafınızca rahatça incelenebilecek temiz, amaca yönelik ve dengeli bir Git akışı tercih edilmiştir.
+- Codemagic (iOS Dogrulamasi) & CI/CD:
+  Uygulamanin iOS platformunda sorunsuz derlenip calistigini garanti etmek adina Codemagic Mac M2 bulut derleyicisi ve Appetize.io canli testi dogrulanmistir. 

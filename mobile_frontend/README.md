@@ -148,6 +148,15 @@ VardiGO vaka çalışmasında ekran sayısı sınırlı olsa dahi **Feature-Base
 3. **Genişleyebilirlik ve Düşük Bilişsel Yük (Scalability & Low Cognitive Load):**
    Gelecekte sisteme eklenecek yeni modüller (örn: `messaging/`, `contracts/`, `profile/`), mevcut kod tabanına dokunmadan tak-çıkar (*plug-and-play*) mantığıyla entegre edilebilir. Geliştirici sadece ilgili özelliğin klasörüne odaklanarak bakım maliyetini ve bilişsel yükü minimuma indirir.
 
+### Neden BLoC (Business Logic Component) Durum Yönetimi?
+
+1. **Katı Durum Makinesi ve Tek Yönlü Veri Akışı (Unidirectional Data Flow):**
+   VardiGO'daki çoklu aday seçimi, anlık filtreleme, aciliyet geri sayımı ve kabul/ret butonlarının kilitlenmesi gibi eşzamanlı UI durumları, BLoC'un `Event -> State` akışı sayesinde deterministik ve öngörülebilir şekilde yönetilir.
+2. **UI'dan Bağımsız 100% Test Edilebilirlik:**
+   State mantığı Widget ağacına doğrudan bağlı olmadığı için, `bloc_test` ile tüm durum geçişleri ve hata senaryoları saf Dart testleriyle saniyeler içinde doğrulanır (`36/36 passed`).
+3. **Kurumsal Ölçeklenebilirlik ve Ekip Standardı:**
+   Kurumsal Flutter projelerinde en yaygın ve olgun standart olan BLoC, kodun okunabilirliğini ve ekip içi sürdürülebilirliğini maksimize eder.
+
 ---
 
 ## Test ve Kalite Güvencesi (QA Matrix)
@@ -173,3 +182,19 @@ flutter test
 # Statik kod analizini çalıştırın:
 flutter analyze
 ```
+
+---
+
+## CI/CD ve iOS Bulut Doğrulaması (Codemagic & Appetize.io)
+
+Mobil uygulamanın bağımsız Apple macOS bulut ortamında hatasız derlendiği ve iOS 18.2 üzerinde çalıştığı kanıtlanmıştır:
+* **Codemagic (Apple Silicon Mac M2):** CI/CD pipeline'ı üzerinde otomatik testler ve iOS Simulator (`Runner.app`) paketi başarıyla derlendi.
+* **Appetize.io:** Web tabanlı gerçek iOS 18.2 (iPhone 14 Pro) simülatöründe arayüz render'ı ve ekran akışı doğrulandı.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d2d53998-2d43-427d-881f-ff2d8a4881c6" alt="Codemagic CI/CD Build" width="49%" />
+  <img src="https://github.com/user-attachments/assets/eab31031-ffe6-453e-8e46-788c0e753698" alt="Appetize iOS 18.2 Simulator" width="49%" />
+  <br>
+  <em><strong>Solda:</strong> Codemagic (Mac M2) CI/CD derleme ve test pipeline'ı &bull; <strong>Sağda:</strong> Appetize.io üzerinde iOS 18.2 (iPhone 14 Pro) canlı simülatör doğrulaması</em>
+</p>
+

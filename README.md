@@ -147,6 +147,7 @@ vardigo/
 │   ├── Dockerfile                  # Backend Konteyner İmaj Yapılandırması
 │   └── requirements.txt            # Python Bağımlılıkları
 │
+├── codemagic.yaml                  # Codemagic Mac M2 CI/CD ve iOS Simulator Derleme Yapılandırması
 ├── docker-compose.yml              # Tek Komutla Servis Başlatma Yapılandırması
 ├── SUREC.txt                       # Geliştirme Süreci ve Karşılaşılan Zorluklar Notu
 └── test_guide.txt                  # Adım Adım Doğrulama ve Test Kılavuzu
@@ -189,10 +190,11 @@ Değerlendirme sürecinde uçtan uca akışı doğrulamak için aşağıdaki ad�
 
 Proje, **Feature-Based Clean Architecture** prensiplerine göre inşa edilmiştir.
 
-### Neden Feature-Based Clean Architecture?
+### Neden Feature-Based Clean Architecture & BLoC?
 1. **Çift Rol ve Alan İzolasyonu (Dual-Role Domain Boundary):** İşveren ve İş Arayan modülleri birbirinden tamamen izole edilmiştir.
-2. **Saf İş Mantığı & 100% Test Edilebilirlik:** `domain/` katmanında hiçbir UI veya üçüncü parti kütüphane bağımlılığı bulunmaz; tüm iş kuralları saf Dart birim testleriyle (`36/36 passed`) doğrulanabilir.
-3. **Modüler Genişleyebilirlik:** Yeni eklenecek özellikler mevcut kod tabanına dokunmadan tak-çıkar mantığıyla eklenebilir.
+2. **Neden BLoC Durum Yönetimi (Finite State Machine):** Çift rollü akışta ve kritik iş kurallarında (çoklu seçim, dinamik aciliyet geri sayımı, kabul/ret idempotency kilidi); durum geçişlerini deterministik kılan, UI'dan bağımsız saf Event/State ayrımı sunan ve kurumsal Flutter standartlarına en uygun BLoC deseni tercih edilmiştir.
+3. **Saf İş Mantığı & 100% Test Edilebilirlik:** `domain/` katmanında hiçbir UI veya üçüncü parti kütüphane bağımlılığı bulunmaz; tüm use case'ler ve BLoC durumları saf Dart testleriyle (`36/36 passed`) doğrulanmıştır.
+4. **Modüler Genişleyebilirlik:** Yeni eklenecek özellikler mevcut kod tabanına dokunmadan tak-çıkar mantığıyla eklenebilir.
 
 
 
@@ -340,6 +342,19 @@ flutter test
 # Statik kod analizi (0 issue / Clean Architecture):
 flutter analyze
 ```
+
+### CI/CD ve iOS Bulut Doğrulaması (Codemagic & Appetize.io)
+
+Projenin yalnızca yerel emülatörde değil, bulut CI/CD ortamında da eksiksiz derlendiği ve çalıştığı doğrulanmıştır:
+* **Codemagic (Apple Silicon Mac M2):** CI/CD pipeline'ı üzerinde otomatik testler ve iOS Simulator (`Runner.app`) derlemesi başarıyla tamamlandı.
+* **Appetize.io:** Web tabanlı gerçek iOS 18.2 (iPhone 14 Pro) simülatöründe arayüz render'ı ve ekran akışı doğrulandı.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d2d53998-2d43-427d-881f-ff2d8a4881c6" alt="Codemagic CI/CD Build" width="49%" />
+  <img src="https://github.com/user-attachments/assets/eab31031-ffe6-453e-8e46-788c0e753698" alt="Appetize iOS 18.2 Simulator" width="49%" />
+  <br>
+  <em><strong>Solda:</strong> Codemagic (Mac M2) CI/CD derleme ve test pipeline'ı &bull; <strong>Sağda:</strong> Appetize.io üzerinde iOS 18.2 (iPhone 14 Pro) canlı simülatör doğrulaması</em>
+</p>
 
 ---
 
